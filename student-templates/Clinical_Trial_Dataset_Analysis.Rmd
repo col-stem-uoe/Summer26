@@ -3,8 +3,9 @@ title: "Exploring a Clinical Trial Dataset"
 author: "UoE Summer School 2026 Team "
 date: "2026"
 ---
+# Part 1: Exploring the Dataset
 
-# Importing the data set
+## Importing the data set
 
 ```{r}
 library(tidyverse)
@@ -58,7 +59,7 @@ Which variable tells us:
 
 - post-treatment blood pressure?
 
-## Step 4: Check the categories
+## Step 4: Count treatment groups
 
 ### Count how many patients are in each treatment group.
 
@@ -67,14 +68,6 @@ The function`count()`
 - counts how many observations belong to each category of the variable `group`.
 
 - mainly used with **categorical variables**.
-
-In our dataset, the variable `group` contains the treatment assigned to each patient:
-
-- Placebo
-
-- Low Dose
-
-- High Dose
 
 ```{r}
 count(data, group)
@@ -98,7 +91,6 @@ Before analysing data, researchers often want to know:
 
 - Are any categories missing?
 
-In this clinical trial, the output tells us that the researchers assigned the same number of patients to each treatment group.
 
 ### Your turn! Explore another categorical variable
 
@@ -124,48 +116,8 @@ Now we return directly to the research question:
 
 Our research question compares the **High Dose** and **Placebo** groups. Do we need all three treatment groups?
 
-### Create a Subset for the Research Question
-
-Before we create our subset, let's look at two symbols that appear frequently in R.
-
-#### The Assignment Operator: `<-`
-
-- The symbol `<-` means: Store the result on the right-hand side in the object on the left-hand side.
-
-  - In our analysis : `bp_data <- data` means " Create a new object called `bp_data` and store the dataset `data` inside it."
-
-#### The Pipe Operator: `|>`
-
-- The symbol `|>` is called the **pipe operator**.
-
-- it means: Take the result from the left and pass it to the function on the right.
-
-```{r}
- data |>
-    count(group)
-```
-
-can be read as:
-
-> Take the dataset `data` and count the number of observations in each treatment group.
 
 ### Creating a Subset
-
-The dataset contains three treatment groups:
-
-- Placebo
-
-- Low Dose
-
-- High Dose
-
-However, our research question only compares:
-
-- Placebo
-
-- High Dose
-
-Therefore, we will create a new dataset containing only these two groups.
 
 **The filter() function allows us to select observations that meet specific conditions.**
 
@@ -175,29 +127,14 @@ bp_data <- data |>
 
 ```
 
-- `filter()` = selects rows from a dataset.
 
-- `group %in% c("Placebo", "High Dose")` = Keep only patients whose treatment group is either "Placebo" or "High Dose".
+# Part 2: Summary Statistics and Visualisation
 
-- `bp_data`= name of new dataset
+We have created `bp_data`, which contains only the High Dose and Placebo groups.
 
-We can read this code as: Take the dataset `data`, keep only the patients in the Placebo and High Dose groups, and store the result in a new dataset called `bp_data`.
+In the next activity, we will use this dataset to calculate summary statistics and create a graph.
 
-## Step 6: Comparing Treatment Groups
-
-Now we return directly to the research question:
-
-> Do patients receiving the High Dose Hypotensol treatment have lower post-treatment systolic blood pressure than patients receiving the Placebo treatment?
-
-We are comparing:
-
-- a **categorical variable** (`group`)
-
-- a **numerical variable** (`sbp_post`)
-
-To begin, we can calculate the average blood pressure for each treatment group.
-
-### (1) Calculate Summary Statistics for Each Group
+## (1) Calculate Summary Statistics for Each Group
 
 ```{r}
 group_summary <- bp_data |>
@@ -212,12 +149,6 @@ group_summary
 ```
 
 - The `group_by()` function tells R to split the dataset into groups based on the variable `group`.
-
-  - In our dataset, this creates two groups:
-
-    - High Dose
-
-    - Placebo
 
 - The `summarise()` function calculates summary statistics for each group.
 
@@ -234,124 +165,27 @@ group_summary
 
 - Which group shows more variability in blood pressure values?
 
-### Understanding the Summary Statistics
 
-The table provides three important pieces of information about each treatment group.
 
-- `n` tells us how many patients are in each group.
-
-- `Mean_SBP` tells us the average post-treatment blood pressure for each group.
-
-- `SD_SBP` (standard deviation) tells us how much variation there is in blood pressure values within a group.
-
-A small standard deviation means that most patients have blood pressure values close to the group average. A large standard deviation means that patients differ more from one another.
-
-When comparing treatment groups, we are usually interested in:
-
-- whether one group has a lower average blood pressure than the other; and
-
-- whether the blood pressure values are similarly spread out within each group.
-
-For example, if one group has a standard deviation of 8 mmHg and another has a standard deviation of 20 mmHg, the second group shows much greater variation in blood pressure values.
-
-The summary statistics suggest that the High Dose group has a lower average post-treatment blood pressure than the Placebo group. However, we do not yet know whether this difference is large enough to be considered statistically significant.
-
-### (2) Plotting group means
+## (2) Plotting group means
 
 ```{r}
 ggplot(group_summary,
-       aes(x = group,
-           y = Mean_SBP)) +
+       aes(x = ,
+           y =  )) +
   geom_col()
 ```
 
-**How do we read the code?** Take the summary table, place the treatment groups on the x-axis, place the mean blood pressure values on the y-axis, and draw a bar for each group.
 
-- `geom_col()`= creates a bar chart using values that have already been calculated.
-
-  - In our case, the heights of the bars come from the variable: `Mean_SBP`
-
-- `aes()` = tells R: Put the treatment groups on the x-axis. Put the mean blood pressure values on the y-axis.
-
-### Adding Labels to the Bars
-
-```{r}
-ggplot(group_summary,
-       aes(x = group,
-           y = Mean_SBP)) +
-  geom_col(fill = "steelblue") +
-  geom_text(
-    aes(label = round(Mean_SBP, 1)),
-    vjust = -0.5
-  ) +
-  labs(
-    x = "Treatment group",
-    y = "Mean post-treatment systolic blood pressure (mmHg)"
-  )
-```
-
-- `geom_text()` = adds text to a plot
-
-Here, it displays t**he mean blood pressure value above each bar**.
-
-- `label = round(Mean_SBP, 1)` = display the mean rounded to 1 decimal place.
-
-- `vjust = -0.5` = move the label slightly above the bar.
 
 ### Interpreting the Plot
 
 The mean post-treatment blood pressure is:
 
-- **125.1 mmHg** for the High Dose group
+-      for the High Dose group
 
-- **143.1 mmHg** for the Placebo group
+-       for the Placebo group
 
-The High Dose group has a lower average blood pressure than the Placebo group.
 
-This finding is consistent with our hypothesis that patients receiving the High Dose treatment have lower post-treatment blood pressure than patients receiving the Placebo treatment.
 
-### But...
 
-Although the groups appear different, we do not yet know whether this difference is statistically significant.
-
-**Could this difference have occurred simply by chance?**
-
-To answer this question, we need to perform a hypothesis test.
-
-## Note: Missing Values ? - How to check and what to do
-
-Before calculating statistics, researchers should check whether a variable contains missing values. Missing information can affect the results of an analysis.
-
-- `data$variable_name` = Selects a single variable from the dataset.
-
-```{r}
-data$sbp_post
-```
-
-- `is.na()` = Checks whether each value is missing.
-
-```{r}
-is.na(data$sbp_post)
-```
-
-- `FALSE` = value is present
-
-- `TRUE` = value is missing
-
-To count how many values are missing in the variable `sbp_post`.
-
-```{r}
-sum(is.na(data$sbp_post))
-```
-
-there are no missing values.
-
-If you do have missing values:
-
-- You can add `na.rm = TRUE` to many R functions, so that we can ignore missing values automatically
-
-> "Remove missing values before calculating the mean."
-
-```{r}
-mean(data$sbp_post, na.rm = TRUE)
-```
