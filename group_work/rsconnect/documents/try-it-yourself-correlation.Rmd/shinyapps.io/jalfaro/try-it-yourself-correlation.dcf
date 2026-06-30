@@ -1,0 +1,13 @@
+name: try-it-yourself-correlation
+title: try-it-yourself-correlation
+username: jalfaro
+account: jalfaro
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14975158
+bundleId: 10559894
+url: https://jalfaro.shinyapps.io/try-it-yourself-correlation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: sbp_demo.csv|Try _it_Yourself.qmd|try-it-yourself-chi-square.Rmd|try-it-yourself-t-test.Rmd|worked-example.qmd

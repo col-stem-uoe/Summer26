@@ -1,0 +1,87 @@
+---
+title: " "
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    css: styles.css
+    title-block-banner: none
+    title-block-style: none
+    title-block: none
+    page-layout: full
+    footer:
+      left: "© 2026 Javiera Alfaro – Centre for Open Learning, University of Edinburgh"
+      right: "Website created with [Quarto](https://quarto.org)"
+editor: visual
+---
+
+[Pre-University Summer School 2026 · University of Edinburgh]{style="font-size: 0.9rem; color: #777;"}
+
+# 🧪 Exploring Medical Data with R
+
+This is your companion site for the Summer School practical sessions. Over two sessions, you will learn how researchers use data to answer questions about health and medicine.
+
+We will focus on one main idea:
+
+> A research question determines which variables we need, how we summarise the data, and which statistical test we use.
+
+---
+
+## What you will learn
+
+You will learn how to:
+
+- identify categorical and numerical variables;
+- import a dataset into R;
+- inspect and explore a dataset;
+- calculate summary statistics;
+- create simple graphs;
+- interpret results in the context of a research question;
+- understand why hypothesis testing is needed.
+
+---
+
+## The main dataset
+
+Our main example uses a fictional clinical trial dataset called `sbp_demo.csv`.
+
+The trial investigates a new blood pressure medication called **Hypotensol**.
+
+We will ask:
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+
+---
+
+## How the sessions work
+
+### Session 1: Exploring and summarising data
+
+In the first session, we will:
+
+- open RStudio;
+- download and use an R Markdown student workbook;
+- import the clinical trial dataset;
+- identify the variables needed for the research question;
+- calculate summary statistics; and
+- create visualisations.
+
+### Session 2: Testing research questions
+
+In the second session, we will return to the patterns observed in Session 1 and ask:
+
+> Could this difference have occurred simply by chance?
+
+We will introduce hypothesis testing and learn how statistical tests help researchers make evidence-based conclusions.
+
+---
+
+## Where to start
+
+Start here:
+
+**[Getting Started with RStudio](Getting_started_with_RStudio.html)**
+
+Then continue to:
+
+**[Exploring a Clinical Trial Dataset](Exploring_a_Clinical_Trial_Dataset.html)**

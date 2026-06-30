@@ -1,0 +1,348 @@
+---
+title: "Try It Yourself: Chi-square Test"
+format:
+  html:
+    code-tools: true
+output: 
+  learnr::tutorial:
+    progressive: false  #this creates the sidebar (creates it= true, turns off sidebar= flase)
+    allow-skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+# Install and load required packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, DT, medicaldata, learnr, kableExtra, ggplot2, janitor)
+
+library(learnr)
+library(dplyr)
+library(ggplot2)
+library(medicaldata)
+library(DT)
+library(janitor)
+data("smartpill")
+```
+
+## 🔍 Your Task
+
+> Test whether **treatment group** is associated with **clinical improvement** in patients with tuberculosis using the `strep_tb` dataset.
+
+You will analyse whether receiving **Streptomycin** is linked to a higher chance of **clinical improvement**, as measured by radiologic outcomes. Specifically, you’ll test the association between the **treatment group** (`arm`) and a new binary **outcome** variable (`improved`), which indicates whether patients showed moderate or considerable improvement on their 6-month X-ray.
+
+To do this, you’ll:
+
+- Create a contingency table showing counts of improved/not improved patients by treatment group.
+- Visualise the data using a **stacked bar chart**.
+- Run a **chi-square test of independence**.
+- Write up your results with the appropriate statistical summary.
+
+
+
+------------------------------------------------------------------------
+
+### 🧬 Dataset Overview: `strep_tb`
+
+**Source**: Reconstructed data from the 1948 BMJ paper\
+**Study type**: Randomised, placebo-controlled trial\
+**Participants**: 107 patients with tuberculosis\
+**Treatment arms**:\
+- `Streptomycin` (2g daily)\
+- `Control` (no streptomycin)
+
+**Outcome of interest**:\
+- `improved`: Logical variable (TRUE/FALSE) derived from radiologic score\
+- TRUE = radiologic score of 5 or 6 (moderate/considerable improvement)
+
+------------------------------------------------------------------------
+
+### 📋 Variable Key
+
+| Variable | Description |
+|------------------------------------|------------------------------------|
+| `patient_id` | Unique patient identifier |
+| `arm` | Treatment group: Streptomycin or Control |
+| `dose_strep_g` | Dose of Streptomycin in grams |
+| `gender` | M / F |
+| `baseline_condition` | 1 = Good, 2 = Fair, 3 = Poor |
+| `baseline_temp` | Categorised body temperature |
+| `baseline_esr` | ESR (inflammation marker) category |
+| `baseline_cavitation` | Cavitation on X-ray: yes/no |
+| `strep_resistance` | Streptomycin resistance at 6 months |
+| `radiologic_6m` | X-ray outcome description |
+| `rad_num` | Numeric X-ray outcome (1 = death → 6 = great improvement) |
+| `improved` | TRUE if rad_num ≥ 5, otherwise FALSE |
+
+------------------------------------------------------------------------
+
+### Step 1: Preview the Dataset
+
+#### Raw Dataset
+
+```{r raw_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(DT)
+
+# Show structure
+glimpse(strep_tb)
+
+```
+
+#### Formatted Dataset
+
+```{r interactive_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+DT::datatable(
+  strep_tb,
+  options = list(scrollX = TRUE),
+  class = 'stripe nowrap',
+  caption = "Preview of the strep_tb Dataset"
+)
+
+```
+
+### Step 2: Summarise by Group
+
+```{r summary_by_group, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+
+# Your turn! Fill in the missing variable names
+library(dplyr)
+library(kableExtra)
+
+# Step 0: Set variable order and create outcome variable based on improvement
+strep_tb$outcome <- ifelse(strep_tb$improved == TRUE, "Yes", "No")
+strep_tb$outcome <- factor(strep_tb$outcome, levels = c("No", "Yes"))
+
+# Step 1: Count and calculate %
+label_data <- strep_tb |> 
+  count(_____, _____) |>          # <1>
+  group_by(_____) |>              # <2>
+  mutate(
+    percent = n / sum(n),         # <3>
+    label = paste0(round(percent * 100), "%")  # <4>
+  )
+
+label_data
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> 1. Replace both blanks with the correct variables: <code>treatment group</code> and <code>outcome</code>.<br> 2. Group by the treatment variable so the percentages add to 100% within each group.<br> 3. Compute the proportion of each outcome level (<code>Yes</code>/<code>No</code>) per group.<br> 4. Create a text label like <code>"80%"</code> to use in the next step (plotting).
+:::
+
+```{r summary_by_group-solution}
+
+# Solution: summarise categorical outcome by group
+
+# Step 0: Set variable order and create outcome variable based on improvement
+strep_tb$outcome <- ifelse(strep_tb$improved == TRUE, "Yes", "No")
+strep_tb$outcome <- factor(strep_tb$outcome, levels = c("No", "Yes"))
+
+# Step 1: Count and calculate %
+label_data <- strep_tb |>
+  count(arm, outcome) |>
+  group_by(arm) |>
+  mutate(
+    percent = n / sum(n),
+    label = paste0(round(percent * 100), "%")
+  )
+
+label_data
+
+```
+
+### Step 3: Visualise the Comparison (Stacked Bar Chart)
+
+::: {style="border-left: 4px solid #1E88E5; padding: 1em; background-color: #E3F2FD; border-radius: 4px;"}
+<strong>📌 Important:</strong><br><br>
+
+<code>strep_tb</code> is your **main dataset** for <code>ggplot()</code>:\
+Use it to build the stacked bars with <code>geom_bar(position = "fill")</code>.\
+This will automatically count values and scale each bar to 100%.
+
+<code>label_data</code> is used **only inside** <code>geom_text()</code>:\
+It contains your pre-computed percentages and formatted labels (e.g. <code>"80%"</code>) from Step 2.
+
+Summary:
+
+<ul style="margin-top: 0.5em; margin-bottom: 0;">
+
+<li><code>strep_tb</code> = raw data → used for bar height + counts</li>
+
+<li><code>label_data</code> = summarised data → used for label positioning</li>
+
+</ul>
+:::
+
+```{r plot_stack_comparison, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# 1. Re-create summary_result inside this chunk
+
+
+
+# 2. Your turn! Use your table from Step 2
+library(ggplot2)
+
+ggplot(_____, aes(x = _____, fill = _____)) +                 # <1>
+  geom_bar(position = "fill", colour = "black") +             # <2>
+  geom_text(data = _____,                                     # <3>
+            aes(x = _____, y = _____, label = _____, fill = _____),
+            position = position_stack(vjust = 0.5),
+            colour = "white", size = 4.5, fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +              # <4>
+  labs(title = "Proportion of Patients Who Improved by Group",
+       y = "Percentage", x = "Treatment Group",
+       fill = "Improved?") +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(colour = "grey85"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> • Use <code>strep_tb</code> as your main dataset for <code>ggplot()</code><br> • Set <code>x = arm</code> and <code>fill = outcome</code> inside <code>aes()</code><br> • Use the <code>label_data</code> table from Step 2 for <code>geom_text()</code><br> • In <code>geom_text()</code>, map <code>y = percent</code> and <code>label = label</code><br> • Add <code>position = position_stack(vjust = 0.5)</code> to centre the labels<br> • Format y-axis using <code>scale_y_continuous(labels = scales::percent)</code>
+:::
+
+```{r plot_stack_comparison-solution}
+
+# 1. Re-create summary_result inside this chunk
+strep_tb$outcome <- ifelse(strep_tb$improved == TRUE, "Yes", "No")
+strep_tb$outcome <- factor(strep_tb$outcome, levels = c("No", "Yes"))
+
+label_data <- strep_tb |> 
+  count(arm, outcome) |> 
+  group_by(arm) |> 
+  mutate(
+    percent = n / sum(n),
+    label = paste0(round(percent * 100), "%")
+  )
+
+label_data
+
+# 2. Your turn! Use your table from Step 2
+ggplot(strep_tb, aes(x = arm, fill = outcome)) +
+  geom_bar(position = "fill", colour = "black") +
+  geom_text(data = label_data,
+            aes(x = arm, y = percent, label = label, fill = outcome),
+            position = position_stack(vjust = 0.5),
+            colour = "white", size = 4.5, fontface = "bold") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Proportion of Patients Who Improved by Group",
+       y = "Percentage", x = "Treatment Group",
+       fill = "Improved?") +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_line(colour = "grey85"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+### Step 4: Run a chi-square test
+
+```{r run_chisquare, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+# We need to create the column "outcome again"
+
+strep_tb$outcome <- ifelse(strep_tb$improved == TRUE, "Yes", "No")
+strep_tb$outcome <- factor(strep_tb$outcome, levels = c("No", "Yes"))
+
+# Step 1: Create contingency table
+table_outcome <- table(strep_tb$arm, strep_tb$outcome)
+
+# Step 2: Run chi-square test of independence
+# Your turn! Run a chi-square test of independence
+chi_test <- chisq.test(___)
+
+# Step 3: View results
+chi_test
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+
+1.  <code>ifelse(…)</code> is used to create a new <code>outcome</code> column based on whether each patient improved – this turns <code>TRUE/FALSE</code> into <code>"Yes"/"No"</code>.<br>
+2.  <code>factor(…)</code> makes sure the outcome variable has the correct order: <code>No</code> first, then <code>Yes</code>.<br>
+3.  <code>table(strep_tb\$arm, strep_tb\$outcome)</code> creates a contingency table showing how many patients improved in each treatment group.<br>
+4.  <code>chisq.test(…)</code> runs a chi-square test on this table to check if there’s a relationship between treatment and improvement.<br><br>
+
+✅ The result will tell you if there’s a statistically significant association between treatment and improvement.
+:::
+
+```{r run_chisquare-solution}
+# We need to create the column "outcome again"
+
+strep_tb$outcome <- ifelse(strep_tb$improved == TRUE, "Yes", "No")
+strep_tb$outcome <- factor(strep_tb$outcome, levels = c("No", "Yes"))
+
+# Step 1: Create contingency table
+table_outcome <- table(strep_tb$arm, strep_tb$outcome)
+
+# Step 2: Run chi-square test of independence
+chi_test <- chisq.test(table_outcome)
+
+# Step 3: View results
+chi_test
+```
+
+✅ The test checks whether improvement is **related** to the treatment group, based on a **contingency table of counts**.
+
+You’ll see three important pieces of output:
+
+| Term | Meaning |
+|------------------------------------|------------------------------------|
+| `X-squared` | The test statistic — how different the observed counts are from expected |
+| `df` | Degrees of freedom (based on the number of rows/columns in your table) |
+| `p-value` | Whether the observed association is statistically significant |
+
+If the **p-value is below 0.05**, we reject the null hypothesis and conclude:
+
+> “There is a significant association between treatment group and clinical outcome.”
+
+This means that **treatment may influence whether patients improved**.\
+
+### ✍️ Step 5: Interpretation
+
+```{r interpretation_question, echo=FALSE}
+question("Was the association between treatment and outcome significant?",
+  answer("Yes – the p-value was below 0.05", correct = TRUE),
+  answer("No – there was no association", correct = FALSE),
+  answer("No – the test was not appropriate for categorical data", correct = FALSE),
+  allow_retry = TRUE
+)
+```
+
+> 💡 **Note:**\
+> A post hoc test is not necessary here because both variables — treatment group (`arm`) and outcome (`improved`) — only have two levels each.\
+> The chi-square test already compares the only available pair: Control vs Streptomycin.\
+> Post hoc tests are useful when you have three or more groups and need to identify which pairs differ.\
+> In this case, the main chi-square result gives you all the information you need.
+
+### ✍️ Step 6: Write-Up Practice
+
+Now it’s your turn to **write a short results paragraph** using your Chi-square output.
+
+Use the template below and **replace the blanks** with your results:
+
+``` writeup-hint
+
+A Chi-square test of independence showed a significant association between _____ and _____, χ²(___, N = ___) = ___, p = ___. These results suggest that _____.
+```
+
+```{r writeup-draft, exercise=TRUE}
+# Write your paragraph here using your own results
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> Include the following in your write-up:<br><br> - The two categorical variables you tested<br> - The Chi-square statistic (χ²), degrees of freedom (df), and sample size (N)<br> - The p-value (rounded to 3 decimal places)<br> - A short conclusion on whether the variables were related
+:::
+
+```{r writeup-draft-solution}
+This study examined whether **treatment group** was associated with **patient outcome** in a 1948 tuberculosis trial.
+
+As shown in Figure 1 (plot), the **Streptomycin group** had a higher proportion of patients who improved compared to the **Control group**.
+
+A Chi-square test of independence showed a significant association between treatment group and clinical outcome, χ²(1, N = 107) = 11.48, p = .001. These findings suggest that patients receiving Streptomycin were more likely to show clinical improvement than those who received only bed rest.
+
+```

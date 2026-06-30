@@ -1,0 +1,240 @@
+---
+title: "Try It Yourself: Test a Hypothesis t-test"
+format:
+  html:
+    code-tools: true
+output: 
+  learnr::tutorial:
+    progressive: false  #this creates the sidebar (creates it= true, turns off sidebar= flase)
+    allow-skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+# Install and load required packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, DT, medicaldata, learnr, kableExtra, ggplot2)
+
+library(learnr)
+library(gradethis)
+library(dplyr)
+library(ggplot2)
+library(medicaldata)
+data("strep_tb")
+```
+
+## 🔍 Your Task
+
+> Compare **radiologic scores** between **treatment** and **control** groups using the `strep_tb` dataset.
+
+------------------------------------------------------------------------
+
+### 🧬 Dataset Overview: `strep_tb`
+
+**Source**: Reconstructed data from the 1948 BMJ paper\
+**Study type**: Randomised, placebo-controlled trial\
+**Participants**: 107 patients with tuberculosis\
+**Treatment arms**:\
+- `Streptomycin` (2g daily)\
+- `Control` (no streptomycin)
+
+**Outcome of interest**:\
+- `improved`: Logical variable (TRUE/FALSE) derived from radiologic score\
+- TRUE = radiologic score of 5 or 6 (moderate/considerable improvement)
+
+------------------------------------------------------------------------
+
+### 📋 Variable Key
+
+| Variable | Description |
+|------------------------------------|------------------------------------|
+| `patient_id` | Unique patient identifier |
+| `arm` | Treatment group: Streptomycin or Control |
+| `dose_strep_g` | Dose of Streptomycin in grams |
+| `gender` | M / F |
+| `baseline_condition` | 1 = Good, 2 = Fair, 3 = Poor |
+| `baseline_temp` | Categorised body temperature |
+| `baseline_esr` | ESR (inflammation marker) category |
+| `baseline_cavitation` | Cavitation on X-ray: yes/no |
+| `strep_resistance` | Streptomycin resistance at 6 months |
+| `radiologic_6m` | X-ray outcome description |
+| `rad_num` | Numeric X-ray outcome (1 = death → 6 = great improvement) |
+| `improved` | TRUE if rad_num ≥ 5, otherwise FALSE |
+
+------------------------------------------------------------------------
+
+### Step 1: Preview the Dataset
+
+#### Raw Dataset
+
+```{r raw_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(DT)
+library(medicaldata)
+
+# Show structure
+glimpse(strep_tb)
+
+```
+
+#### Formatted Dataset
+
+```{r interactive_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+DT::datatable(
+  strep_tb,
+  options = list(scrollX = TRUE),
+  class = 'stripe nowrap',
+  caption = "Preview of the strep_tb Dataset"
+)
+
+```
+
+### Step 2: Summarise by Group
+
+```{r summary_by_group, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# Your turn! Fill in the missing variable names
+library(dplyr)
+library(kableExtra)
+
+summary_result <- strep_tb |> 
+  group_by(_____) |>                        # <1>
+  summarise(
+    mean_score = mean(_____, na.rm = TRUE), # <2>
+    sd_score = sd(_____, na.rm = TRUE),     # <2>
+    se_score = sd_score / sqrt(n())
+  )
+
+
+kable(summary_result,
+      caption = "📊 Summary of Radiologic Scores by Group") |>
+  kable_styling(full_width = FALSE, position = "center", font_size = 16)
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> 1. Replace the first blank with <code>arm</code> – this is your grouping variable (x-axis).<br> 2. Replace the second and third blanks with <code>rad_num</code> – this is your outcome variable (y-axis).<br> 3. Use <code>na.rm = TRUE</code> inside both <code>mean()</code> and <code>sd()</code> to exclude missing values.<br> 4. The <code>se_score</code> (standard error) is calculated by dividing the <code>sd_score</code> by the square root of the sample size in each group:\
+<code>se_score = sd_score / sqrt(n())</code>.
+:::
+
+```{r summary_by_group-solution}
+library(dplyr)
+library(kableExtra)
+
+summary_result <- strep_tb |> 
+  group_by(arm) |> 
+  summarise(
+    mean_score = mean(rad_num, na.rm = TRUE),
+    sd_score = sd(rad_num, na.rm = TRUE),
+    se_score = sd_score / sqrt(n())
+  )
+
+kable(summary_result,
+      caption = "🧮 Summary of Radiologic Scores by Group") |> 
+  kable_styling(full_width = FALSE, position = "center", font_size = 16)
+```
+
+### Step 3: Visualise the Comparison
+
+```{r plot_group_means, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# 1. Re-create summary_result inside this chunk
+
+
+
+
+#  2. Your turn! Replace the blanks with the correct variable names
+# Use your summary table from Step 2
+
+ggplot(_____, aes(x = _____, y = _____)) +
+  geom_col(fill = "#C5004A", colour = "black", width = 0.6) +
+  geom_errorbar(aes(ymin = _____ - _____, ymax = _____ + _____), width = 0.2) +
+  geom_text(aes(label = round(_____, 1)), 
+            vjust = -1.2, size = 5, fontface = "bold", colour = "black") +
+  labs(title = "Radiologic Score by Group",
+       x = "Group", y = "Mean Radiology Score (1–6)") +
+   ylim(0,6)+
+  theme_minimal(base_size = 14)
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> - Use <code>summary_result</code> from Step 2<br> as the first argument of ggplot - <code>arm</code> is the grouping variable (x-axis)<br> - <code>mean_score</code> is your y-axis<br> - <code>se_score</code> gives the error bar height<br> - Add <code>geom_text()</code> to print the mean score on top of each bar
+:::
+
+```{r plot_group_means-solution}
+
+# 1. Re-create summary_result inside this chunk
+summary_result <- strep_tb |>
+  group_by(arm) |>
+  summarise(
+    mean_score = mean(rad_num, na.rm = TRUE),
+    sd_score = sd(rad_num, na.rm = TRUE),
+    se_score = sd_score / sqrt(n())
+  )
+
+# 2. Then run the plot
+ggplot(summary_result, aes(x = arm, y = mean_score)) +
+  geom_col(fill = "#C5004A", colour = "black", width = 0.6) +
+  geom_errorbar(aes(ymin = mean_score - se_score, ymax = mean_score + se_score), width = 0.2) +
+  geom_text(aes(label = round(mean_score, 1)),
+            vjust = -1.2, size = 5, fontface = "bold", colour = "black") +
+  labs(title = "Radiologic Score by Group",
+       x = "Group", y = "Mean Radiology Score (1–6)") +
+   ylim(0,6)+
+  theme_minimal(base_size = 14)
+
+```
+
+### Step 4: Run a t-test
+
+```{r run_ttest, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+t.test(____ ~ ____, data = strep_tb)
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong>\
+Use <code>rad_num</code> as the dependent variable (DV), and <code>arm</code> as the independent variable (IV).\
+The formula should be written as: <code>DV \~ IV</code>.
+:::
+
+```{r run_ttest-solution}
+t.test(rad_num ~ arm, data = strep_tb)
+```
+
+### ✍️ Step 5: Interpretation
+
+Use the output from your t-test in Step 4 to decide whether the difference is **statistically significant**.\
+Focus on the **p-value**, which tells you whether the group difference is likely due to chance.
+
+```{r interpretation_question, echo=FALSE}
+question("Was the difference significant?",
+  answer("Yes – the p-value was below 0.05", correct=TRUE),
+  answer("No – the means were equal"),
+  answer("No – sample size was too small"),
+  allow_retry = TRUE
+)
+```
+
+### ✍️ Write-Up Practice
+
+Now it’s your turn to **write a short results paragraph** using your own t-test output.
+
+Use the template below and **replace the blanks** with your results:
+
+``` writeup-hint
+An independent samples t-test found that patients in the _____ group (M = ___, SD = ___) had significantly _____ post-treatment radiologic scores than those in the _____ group (M = ___, SD = ___), t(___) = ___, p = ___.
+```
+
+```{r writeup-draft, exercise=TRUE}
+# Write your paragraph here using your own results
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> - Mean and SD for each group<br> - The t-value and degrees of freedom<br> - The p-value (rounded to 3 decimal places)<br> - A conclusion on whether the difference was significant
+:::
+
+```{r writeup-draft-solution}
+An independent samples t-test found that patients in the Streptomycin group (M = 4.67, SD = 1.73) had significantly higher post-treatment radiologic scores than those in the Control group (M = 3.13, SD = 1.73), t(104.7) = 4.60, p < .001. This suggests that the treatment group had better radiologic outcomes than the control group, indicating that Streptomycin did improve lung damage on X-rays compared to standard care alone.
+
+```

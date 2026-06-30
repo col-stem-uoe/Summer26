@@ -1,0 +1,784 @@
+
+/* --------------------------------------
+   UoE Summer School Styling – Refined Theme
+----------------------------------------- */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+/* Base body styling */
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: #ffffff;
+  color: #111111;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* --------------------------------------
+   Headings
+----------------------------------------- */
+
+/* Hide any default title block or h1 that might be injected */
+.quarto-title, 
+h1.title {
+  display: none !important;
+}
+
+main.content h1 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+main.content p {
+  margin-bottom: 1rem;
+}
+
+
+h1 {
+  color: #C5004A; /* UoE pink */
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 2rem;
+}
+
+h2 {
+  background-color: #E6F0FA;
+  padding: 0.4rem 1rem;
+  border-left: 5px solid #003366;  /* UoE dark blue */
+  color: #003366;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  color: #003366;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 1.8rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 2px solid #003366;
+  padding: 0.6rem 1rem;
+  background-color: #F3F8FC;  /* very light blue */
+  border-radius: 4px;
+}
+
+
+h4 {
+  color: #444;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+   margin-bottom: 1.5rem;
+  padding-left: 0.2rem;
+  border-left: 3px solid #003366;
+}
+
+
+/* Widen the main content container */
+main.content {
+  max-width: 800px;  /* Try 1000–1200px for wider content */
+  margin: 0 auto;
+}
+
+body.fixed-sidebar .content {
+  max-width: 800px !important;
+}
+
+section {
+  margin-bottom: 2.5rem;
+}
+
+
+/* --- NAVBAR STYLING (UoE Pink + DAPRI proportions) --- */
+.navbar {
+  background-color: #C5004A !important;
+  padding: 8px 32px !important;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo sizing – make it smaller */
+.navbar .navbar-brand img {
+  height: 40px !important;
+  max-height: 40px !important;
+  width: auto !important;
+  margin-right: 16px;
+}
+
+/* Brand text */
+.navbar .navbar-brand {
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  font-family: 'IBM Plex Sans', sans-serif;
+  margin-right: 32px;
+}
+
+/* Navbar links */
+.navbar-nav > li > a,
+.navbar .nav-link {
+  font-size: 0.95rem !important;
+  font-weight: 500;
+  color: white !important;
+  padding: 0.4rem 0.8rem;
+}
+
+/* Hover effect */
+.navbar-nav > li > a:hover,
+.navbar .nav-link:hover {
+  color: #FFD6E7 !important;
+}
+
+/* Push last two items to right (e.g., search or cheat sheet) */
+.navbar-nav {
+  gap: 16px;
+}
+.navbar-nav > li:last-child,
+.navbar-nav > li:nth-last-child(2) {
+  margin-left: auto;
+}
+
+/* TOC container */
+nav[aria-label="On this page"] {
+  all: unset;
+  display: block !important;
+  background-color: #ffffff !important;
+  border-left: 4px solid #003366 !important;
+  padding: 1rem 1.2rem !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+}
+
+nav[aria-label="On this page"] > .sidebar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 0.75rem;
+  background: none;
+  padding-left: 0;
+  border-left: none;
+}
+
+/* Link styles */
+nav[aria-label="On this page"] a {
+  display: block;
+  color: #003366 !important;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+nav[aria-label="On this page"] a:hover {
+  color: #C5004A !important;
+  border-left: 3px solid #C5004A;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding-left: 0.5rem;
+}
+
+nav[aria-label="On this page"] a.active {
+  color: #C5004A !important;
+  font-weight: 700;
+  border-left: 3px solid #C5004A;
+  background-color: #fff6fa;
+  padding-left: 0.5rem;
+  border-radius: 4px;
+}
+
+
+/* --------------------------------------
+   Code Blocks
+----------------------------------------- */
+
+pre code {
+  display: block;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  color: #C5004A;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+
+/* Inline code appearance (standard + table) */
+code, td code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #003366;
+  background-color:#eaecef;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+
+/* --------------------------------------
+   Callouts & Boxes
+----------------------------------------- */
+.callout {
+  border-left: 4px solid #C5004A;
+  background-color: #f9f9f9;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.callout-title {
+  font-weight: 600;
+  color: #C5004A;
+  margin-bottom: 0.5rem;
+}
+
+.callout-note p {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  font-weight: 400;
+}
+
+.definition-box {
+  background-color: #f8f8f8;
+  border-left: 4px solid #C5004A;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 5px;
+  font-size: 0.95rem;
+}
+
+.definition-box a {
+  color: #C5004A; /* UoE pink */
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.example-box {
+  background-color: #f0f9ff;
+  border-left: 4px solid #0072CE;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 5px;
+  font-size: 0.95rem;
+}
+
+.checklist-box {
+  background-color: #fefcf3;
+  border-left: 4px solid #FFC107;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 5px;
+  font-size: 0.95rem;
+}
+
+.highlight {
+  background-color: #FFF1F5;
+  border-left: 4px solid #C5004A;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  color: #333;
+  font-size: 0.95rem;;
+}
+
+.blockquote {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.callout,
+.definition-box,
+.example-box,
+.checklist-box {
+  font-size: 0.95rem; /* Already applied, keep consistent */
+  line-height: 2;
+}
+
+.callout a,
+.definition-box a,
+.example-box a,
+.checklist-box a {
+  font-weight: 500;
+  color: #C5004A;
+  text-decoration: underline;
+}
+
+
+/* --------------------------------------
+   Table Styling: Compact and Clean
+----------------------------------------- */
+table {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.2rem 0;
+}
+
+table th, table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Table header with soft grey background */
+table th {
+  background-color: #F3F3F3 !important;
+  color: #222 !important;
+  font-weight: 600;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+/* Optional: subtle hover on rows */
+table tbody tr:hover {
+  background-color: #f8f8f8;
+}
+
+/* Slightly wider default table */
+table {
+  width: 60%;               /* or try 50–70% */
+  min-width: 400px;         /* ensures it doesn't shrink too much */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Custom narrow class if you want selective control */
+.narrow-table table {
+  width: auto;
+  min-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* --------------------------------------
+   Shiny Iframe Styling
+----------------------------------------- */
+.learnr-container iframe {
+  border: 3px solid #C5004A;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+}
+
+/* --------------------------------------
+   Footer
+----------------------------------------- */
+.footer {
+  font-size: 0.85rem;
+  background-color: #f9f9f9;
+  color: #444;
+  padding: 10px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+
+/* --------------------------------------
+   Code Annotation Styling
+----------------------------------------- */
+
+/* CSS Variables for consistent colors */
+:root {
+  --code-bg: #1e2738;                         /* Dark blue background for code */
+  --uoe-pink: #C5004A;                        /* UoE pink for highlights/emphasis */
+  --highlight-bg: rgba(197, 0, 74, 0.08);     /* Transparent pink for highlights */
+  --comment-color: #88cc88;                   /* Bright green for comments */
+  --variable-color: #9cdcfe;                  /* Light blue for variables */
+  --number-color: #ff8c00;                    /* Orange for numbers */
+  --operator-color: #ffffff;                  /* White for operators */
+  --string-color: #ce9178;                    /* Orange for strings */
+  --function-color: #4ec9b0;                  /* Teal for functions */
+  --keyword-color: #c586c0;                   /* Pink for keywords */
+}
+
+/* Container for code and annotations */
+.code-container {
+  position: relative;
+  background-color: var(--code-bg);
+  color: white;
+  font-family: 'Courier New', monospace;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 2em;
+  overflow: visible;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Custom code block display (for manual HTML blocks) */
+.code-line {
+  white-space: pre;
+  position: relative;
+  margin: 0;
+  padding: 3px 0;
+  font-size: 0.85rem;
+}
+
+/* Annotation marker (the numbered circles) */
+.marker {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background-color: var(--uoe-pink);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 22px;
+  font-size: 12px;
+  margin-left: 5px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.marker:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Annotation bubble styling for manual HTML blocks */
+.annotation {
+  display: none;
+  position: absolute;
+  right: -320px;
+  width: 300px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 12px 15px;
+  color: #333;
+  z-index: 100;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Animation for smoother appearance */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Makes annotation visible when hovering over marker */
+.marker:hover + .annotation {
+  display: block;
+}
+
+/* Styles for Quarto's built-in code annotation system */
+.code-annotation-highlight {
+  background-color: var(--highlight-bg) !important;
+  border-left: 3px solid var(--uoe-pink) !important;
+  width: 100% !important;
+  display: block !important;
+  padding-left: 5px !important;
+  margin-left: -5px !important;
+  border-radius: 0 !important;
+}
+
+/* Ensure the highlight is behind the code text */
+.code-annotation-highlight pre {
+  background-color: transparent !important;
+}
+
+/* Make sure highlight extends fully */
+.sourceCode pre.sourceCode code {
+  background-color: transparent !important;
+}
+
+/* Style Quarto's built-in annotation markers */
+.code-annotation-numeric-marker {
+  background-color: var(--uoe-pink) !important;
+  color: white !important;
+  font-weight: bold !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+
+/* Enhance Quarto's annotation tooltips */
+.code-annotation-container {
+  background-color: white !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  padding: 12px 15px !important;
+  right: -320px !important;
+  width: 300px !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  animation: fadeIn 0.2s ease-in-out !important;
+}
+
+/* === Teaching-Friendly Syntax Colours for R Code === */
+.sourceCode {
+  font-size: 0.85rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* Comments */
+.sourceCode .co {
+  color: #6a737d; /* soft medium grey */
+  font-style: normal; /* no italics for accessibility */
+}
+
+/* Keywords like if, else, function */
+.sourceCode .kw {
+  color: #AF00DB;
+  font-weight: 600;
+}
+
+/* Strings */
+.sourceCode .st {
+  color: #22863a;
+}
+
+/* Numbers */
+.sourceCode .dv {
+  color: #D16969;
+  font-weight: 500;
+}
+
+/* Function names */
+.sourceCode .fu {
+  color: #005cc5;
+  font-weight: 500;
+}
+
+/* Variables */
+.sourceCode .va {
+  color: #b76b00; /* dark amber */
+  font-weight: 600;
+}
+
+/* Operators like <-, +, * */
+.sourceCode .op {
+  color: #111111;
+}
+
+
+@media screen and (max-width: 768px) {
+  nav[aria-label="On this page"] {
+    font-size: 0.85rem;
+  }
+}
+
+/* === MARGIN CALLOUT SUPPORT === */
+
+/* Allow margin content in article layout */
+.marginnote,
+.margin {
+  float: right;
+  clear: right;
+  margin-right: -60%;
+  width: 50%;
+  margin-top: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #444;
+}
+
+/* Prevent content from overlapping margin */
+main.content {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Pink-themed tab styling for better visibility */
+.panel-tabset .nav-tabs {
+  border-bottom: 2px solid #C5004A; /* UoE pink */
+  margin-bottom: 1rem;
+}
+
+.panel-tabset .nav-tabs .nav-link {
+  background-color: #fff0f5; /* pale pink */
+  border: 1px solid #e5c0d5;
+  border-bottom: none;
+  margin-right: 0.3rem;
+  padding: 0.4rem 1.1rem;
+  font-weight: 500;
+  color: #C5004A;
+  border-radius: 6px 6px 0 0;
+  transition: background-color 0.2s ease;
+}
+
+.panel-tabset .nav-tabs .nav-link:hover {
+  background-color: #ffe3ed; /* slightly brighter pink on hover */
+  cursor: pointer;
+}
+
+.panel-tabset .nav-tabs .nav-link.active {
+  background-color: #ffffff;
+  border-color: #e5c0d5 #e5c0d5 #ffffff;
+  font-weight: 600;
+  color: #111;
+}
+
+/* Improve visibility of tab content area */
+.panel-tabset .tab-content {
+  border: 2px solid #e5c0d5; /* Soft pink border */
+  background-color: #fff8fb; /* Very light pink background */
+  padding: 1rem 1.25rem;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* --------------------------------------
+   Purple Variant Tabset for Statistical Test Sections
+----------------------------------------- */
+.tabset-tests > .nav-tabs {
+  border-bottom: 2px solid #7C4DFF;
+}
+
+.tabset-tests > .nav-tabs .nav-link {
+  border: 1px solid #e4d7fb;
+  background-color: #f6f0ff;
+  color: #5e3ab6;
+  font-weight: 600;
+}
+
+.tabset-tests > .nav-tabs .nav-link.active {
+  background-color: #e2d6fc;
+  border-color: #7C4DFF #7C4DFF white;
+  color: #4b2e8a;
+}
+
+.tabset-tests > .tab-content {
+  border: 2px solid #e4d7fb;
+  background-color: #fbf8ff;
+}
+
+/* ------------------------------------------------
+   Golden Ochre Tabset (for energy & contrast)
+-------------------------------------------------- */
+.tabset-golden .nav-tabs .nav-link {
+  background-color: #fff8e1;  /* soft ochre background */
+  color: #996600;             /* dark golden text */
+  border: 1px solid #ffcc66;  /* light ochre border */
+  font-weight: 600;
+}
+
+.tabset-golden .nav-tabs .nav-link.active {
+  background-color: #ffcc66;  /* golden ochre highlight */
+  color: #4a3000;             /* strong contrast text */
+  border-color: #cc9900 #cc9900 #fff8e1;
+}
+
+.tabset-golden .tab-content {
+  background-color: #fffbe6;  /* pale yellow background */
+  border: 1px solid #ffcc66;
+  border-top: none;
+  padding: 1.25rem;
+  border-radius: 0 0 8px 8px;
+}
+
+/* === Teal Tabset Variant === */
+.panel-tabset-teal .nav-tabs .nav-link.active {
+  background-color: #E0F7F7;
+  border-color: #1CA9A9;
+  color: #1CA9A9;
+  font-weight: bold;
+}
+.panel-tabset-teal .nav-tabs .nav-link {
+  background-color: #f6fefe;
+  border: 1px solid #b0e2e2;
+  color: #1CA9A9;
+}
+.panel-tabset-teal .tab-content {
+  border-top: 3px solid #1CA9A9;
+  background-color: #f6fefe;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+/* === Grey Tabset Variant === */
+.panel-tabset-grey .nav-tabs .nav-link.active {
+  background-color: #F3F3F3;
+  border-color: #555555;
+  color: #333333;
+  font-weight: bold;
+}
+.panel-tabset-grey .nav-tabs .nav-link {
+  background-color: #fcfcfc;
+  border: 1px solid #dddddd;
+  color: #555555;
+}
+.panel-tabset-grey .tab-content {
+  border-top: 3px solid #999999;
+  background-color: #fcfcfc;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+/* === Navy Tabset Variant === */
+.panel-tabset-navy .nav-tabs .nav-link.active {
+  background-color: #E6F0FA;
+  border-color: #003366;
+  color: #003366;
+  font-weight: bold;
+}
+.panel-tabset-navy .nav-tabs .nav-link {
+  background-color: #f8fbff;
+  border: 1px solid #b3cde3;
+  color: #003366;
+}
+.panel-tabset-navy .tab-content {
+  border-top: 3px solid #003366;
+  background-color: #f8fbff;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.callout-ochre {
+  border-left: 4px solid #d49a00;
+  background-color: #fef3d5;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.callout-ochre .callout-title {
+  font-weight: 600;
+  color: #d49a00;
+  margin-bottom: 0.5rem;
+}
+/* Override the .callout-tip style to become golden ochre */
+.callout-tip {
+  border-left: 4px solid #d49a00 !important;
+  background-color: #fef3d5 !important;
+}
+
+.callout-tip .callout-title {
+  color: #d49a00 !important;
+}
+
+.result-box {
+  background-color: #f9f9f9;
+  border-left: 4px solid #C5004A;
+  padding: 1em;
+  margin-top: 1em;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.hint-box {
+  background-color: #fff3cd;   /* light yellow */
+  border-left: 5px solid #ffc107;
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 4px;
+  font-size: 0.95em;
+}

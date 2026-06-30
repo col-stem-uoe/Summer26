@@ -1,0 +1,339 @@
+---
+title: "Exploring a Clinical Trial Dataset"
+subtitle: "Session 1: Summary Statistics and Visualisation"
+format:
+  html:
+    code-annotations: hover
+    code-fold: true
+    code-fold-label: "Show Code"
+    toc: true
+    toc-depth: 3
+    css: styles.css
+editor: visual
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+
+data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/main/datasets/sbp_demo.csv",
+  show_col_types = FALSE
+)
+
+bp_data <- data |>
+  filter(group %in% c("Placebo", "High Dose"))
+bp_data
+
+```
+
+## Background
+
+High blood pressure is a major risk factor for cardiovascular disease. Researchers have developed a new medication called **Hypotensol** and want to determine whether it reduces blood pressure more effectively than a placebo.
+
+To investigate this, they conducted a randomised clinical trial.
+
+::: highlight
+### Research question
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+:::
+
+::: callout-important
+## Think like a researcher
+
+We want to compare the **High Dose** and **Placebo** treatment groups.
+
+Each patient has a post-treatment blood pressure measurement.
+
+**What information would help us compare these two groups?**
+:::
+
+To compare the two treatment groups, it is useful to know:
+
+- how many patients are in each group;
+- the average post-treatment blood pressure in each group; and
+- whether the blood pressure values are fairly similar or vary a lot within each group.
+
+These are called **summary statistics**.
+
+In this activity, we will calculate:
+
+- **`n`** = the number of patients in each group;
+- the **mean** = the average post-treatment systolic blood pressure; and
+- the **standard deviation (SD)** = how much the blood pressure values vary within each group.
+
+## (1) Calculate Summary Statistics for Each Group
+
+```{r}
+group_summary <- bp_data |>
+  group_by(group) |>
+  summarise(
+    n = n(),
+    Mean_SBP = mean(sbp_post),
+    SD_SBP = sd(sbp_post)
+  )
+
+group_summary
+```
+
+- The `group_by()` function tells R to split the dataset into groups based on the variable `group`.
+
+  - In our dataset, this creates two groups:
+
+    - High Dose
+
+    - Placebo
+
+- The `summarise()` function calculates summary statistics for each group.
+
+  - Here we calculate:
+    - `n()` = number of patients in each treatment group
+    - `mean()` = average post-treatment blood pressure
+    - `sd()` = standard deviation, which measures how spread out the blood pressure values are
+
+::: {.callout-note collapse="true"}
+## Optional: Rounding the output
+
+By default, R displays several decimal places.
+
+To make the summary table easier to read, we can use the `round()` function.
+
+For example:
+
+```{r}
+group_summary <- bp_data |>
+  group_by(group) |>
+  summarise(
+    n = n(),
+    Mean_SBP = round(mean(sbp_post), 1),
+    SD_SBP = round(sd(sbp_post), 1)
+  )
+
+group_summary
+```
+
+The `round(x, 1)` function rounds a number to **one decimal place**.
+
+For example:
+
+- `125.12345` becomes `125.1`
+- `8.6789` becomes `8.7`
+:::
+
+**Questions**
+
+- Which group has the lower mean blood pressure?
+
+- How many patients are in each group?
+
+- Which group shows more variability in blood pressure values?
+
+::: {.callout-tip collapse="true"}
+## Interpreting the Summary Table
+
+The summary table contains three useful pieces of information.
+
+- **`n`** tells us how many patients are in each treatment group.
+
+- **`Mean_SBP`** tells us the average post-treatment systolic blood pressure for each group.
+
+- **`SD_SBP`** (standard deviation) tells us how much the blood pressure values vary within each group. A smaller SD indicates that patients have more similar blood pressure values, whereas a larger SD indicates greater variation.
+:::
+
+::: result-box
+### Key finding
+
+The **High Dose** group has a lower average post-treatment systolic blood pressure than the **Placebo** group.
+
+This finding is consistent with our research hypothesis.
+:::
+
+## Optional: Checking for Missing Values
+
+::: {.callout-note collapse="true"}
+## Note: What if some values are missing? - How to check and what to do
+
+Before calculating statistics, researchers should check whether a variable contains missing values. Missing information can affect the results of an analysis.
+
+In R, missing values are shown as `NA`.
+
+To check whether `sbp_post` contains missing values, we can use:
+
+```{r}
+sum(is.na(data$sbp_post))
+```
+
+If the result is `0`, there are no missing values in this variable.
+
+If a variable does contain missing values, many R functions allow us to ignore them using `na.rm = TRUE`.
+
+For example:
+
+```{r}
+mean(data$sbp_post, na.rm = TRUE)
+```
+
+This tells R:
+
+> Calculate the mean after removing missing values.
+:::
+
+## (2) Visualising the Results
+
+> **Why create a graph?**
+>
+> - The summary table allows us to compare the treatment groups numerically.
+>
+> - A graph allows us to compare the treatment groups more quickly and makes differences easier to see.
+>
+> - Researchers often create graphs because they make differences between groups easier to see.
+
+Let's create a simple **bar chart** showing the **mean post-treatment systolic blood pressure** for each treatment group.
+
+```{r}
+ggplot(group_summary,
+       aes(x = group,
+           y = Mean_SBP)) +
+  geom_col()
+```
+
+### Understanding the code
+
+- `ggplot()` starts a new graph using the dataset `group_summary`.
+
+  - `aes()` (short for *aesthetics*) tells R which variables to display:
+
+    - `x = group` places the treatment groups on the x-axis.
+
+    - `y = Mean_SBP` places the mean blood pressure on the y-axis.
+
+- `geom_col()`= creates a bar chart using values that have already been calculated.
+
+  - In our case, the heights of the bars come from the variable: `Mean_SBP`
+
+::: {.callout-note collapse="true"}
+## The `+` symbol in ggplot
+
+Unlike many R functions, graphs are built one layer at a time.
+
+The `+` symbol tells R to **add another layer** to the graph.
+
+For example:
+
+- `geom_col()` adds the bars.
+- `geom_text()` adds the labels.
+- `labs()` adds the axis titles.
+
+You can think of `+` as meaning **"and then add..."**.
+:::
+
+## Improving the graph
+
+The graph is informative, but we can make it easier to interpret by:
+
+1.  Adding colours;
+
+2.  Displaying the mean value above each bar; and
+
+3.  Labelling the axes.
+
+```{r}
+ggplot(group_summary,
+       aes(x = group,
+           y = Mean_SBP)) +
+  geom_col(fill = "steelblue") +
+  geom_text(
+    aes(label = round(Mean_SBP, 1)),
+    vjust = -0.5
+  ) +
+  labs(
+    x = "Treatment group",
+    y = "Mean post-treatment systolic blood pressure (mmHg)"
+  )
+```
+
+::: {.callout-note collapse="true"}
+## Optional: 1. Changing the bar colour
+
+The argument `fill = "steelblue"` changes the colour of the bars.
+
+You can replace `"steelblue"` with many other colour names, for example:
+
+- `"tomato"`
+- `"darkgreen"`
+- `"gold"`
+- `"purple"`
+
+Changing the colour does **not** change the data; it simply improves the appearance of the graph.
+:::
+
+::: {.callout-note collapse="true"}
+## Optional: 2. Displaying the mean value above each bar
+
+The function `geom_text()` adds text to a graph.
+
+Here, it displays the mean blood pressure value above each bar.
+
+- `label = round(Mean_SBP, 1)` displays the mean rounded to one decimal place.
+- `vjust = -0.5` positions the label slightly above the bar.
+:::
+
+::: {.callout-note collapse="true"}
+## Optional: 3. Labelling the axes
+
+- By default, ggplot uses the variable names as axis labels.
+
+- The `labs()` function allows us to replace these with clearer, more descriptive labels.
+
+In this example:
+
+``` r
+labs(
+  x = "Treatment group",
+  y = "Mean post-treatment systolic blood pressure (mmHg)"
+)
+```
+
+- `x =` sets the label for the **x-axis**.
+
+- `y =` sets the label for the **y-axis**.
+
+Giving informative axis labels makes graphs easier to understand and interpret.
+:::
+
+### Interpreting the Plot
+
+Look at the graph.
+
+**Questions**
+
+- Which treatment group has the lower mean post-treatment blood pressure?
+- Approximately how much lower is it than the other group?
+- Does the graph support the research hypothesis?
+
+::: {.result-box collapse="true"}
+### Key finding
+
+Both the summary table and the bar chart suggest that patients receiving the **High Dose** treatment had lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment.
+
+This finding is consistent with our research hypothesis.
+:::
+
+### But...
+
+Although the High Dose group appears to have a lower average blood pressure, we do not yet know whether the observed difference is **statistically significant**.
+
+**Could this difference have occurred simply by chance?**
+
+To answer this question, we need to perform a **hypothesis test**.
+
+::: callout-note
+## Looking ahead to Session 2
+
+Today, we used **summary statistics** and **data visualisation** to explore our research question.
+
+In **Session 2**, we will learn how to use **hypothesis tests** to determine whether the difference we observed between the High Dose and Placebo groups is statistically significant.
+
+We will also learn how to choose the appropriate statistical test based on the research question and the types of variables being analysed.
+:::

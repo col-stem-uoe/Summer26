@@ -1,0 +1,166 @@
+---
+title: "Investigating a Clinical Trial Dataset"
+author: " "
+date: "2026"
+
+---
+
+# Importing the data set
+
+```{r}
+library(tidyverse)
+
+data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/main/datasets/sbp_demo.csv",
+  show_col_types = FALSE
+)
+
+```
+
+# **Research Question A**
+
+> Did patients in the High Dose group have lower blood pressure after treatment than before treatment?
+
+Variables:
+
+- `sbp_pre`
+
+- `sbp_post`
+
+```{r}
+high_dose <- data |>
+  filter(group %in% c("High Dose"))
+```
+
+or you could use `filter(group == "High Dose")` = Filter the data to keep rows where the group is High Dose.
+
+```{r}
+high_dose <- data |>
+  filter(group == "High Dose")
+```
+
+```{r}
+high_dose_summary <- high_dose |>
+  summarise(
+    n = n(),
+    Mean_Pre = mean(sbp_pre),
+    Mean_Post = mean(sbp_post),
+    SD_Pre = sd(sbp_pre),
+    SD_Post = sd(sbp_post)
+  )
+
+high_dose_summary
+```
+
+### Reshaping the Data for Plotting
+
+The summary table produced by `summarise()` looks like this:
+
+| Mean_Pre | Mean_Post |
+|----------|-----------|
+| 138.4    | 125.1     |
+
+This format is called **wide format** because the values are stored across multiple columns.
+
+However, `ggplot()` often works more easily when the data are stored in **long format**, where the values are arranged in rows instead.
+
+The `pivot_longer()` function converts the table into the following format:
+
+| Time      | Mean_SBP |
+|-----------|----------|
+| Mean_Pre  | 138.4    |
+| Mean_Post | 125.1    |
+
+```{r}
+pivot_longer(
+  cols = everything(),
+  names_to = "Time",
+  values_to = "Mean_SBP"
+)
+```
+
+#### What does each argument do?
+
+```         
+cols = everything()
+```
+
+Select all columns in the dataset. In this case, these are:
+
+- `Mean_Pre`
+
+- `Mean_Post`
+
+```         
+names_to = "Time"
+```
+
+Take the column names (`Mean_Pre` and `Mean_Post`) and store them in a new variable called `Time`.
+
+```         
+values_to = "Mean_SBP"
+```
+
+Take the values stored inside those columns (`138.4` and `125.1`) and store them in a new variable called `Mean_SBP`.
+
+```{r}
+high_dose_plot <- high_dose |>
+  summarise(
+    Before = mean(sbp_pre),
+    After = mean(sbp_post)
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Time",
+    values_to = "Mean_SBP"
+  )
+```
+
+```{r}
+high_dose_plot <- high_dose_plot |>
+  mutate(
+    Time = factor(
+      Time,
+      levels = c("Before", "After")
+    )
+  )
+```
+
+```{r}
+ggplot(high_dose_plot,
+       aes(x = Time,
+           y = Mean_SBP)) +
+  geom_col(fill = "steelblue") +
+  geom_text(
+    aes(label = round(Mean_SBP, 1)),
+    vjust = -0.5
+  ) +
+  labs(
+    x = "Time point",
+    y = "Mean systolic blood pressure (mmHg)"
+  )
+```
+
+# **Research Question B**
+
+**Do male and female patients differ in their post-treatment systolic blood pressure?**
+
+Variables:
+
+- `sex` (categorical)
+
+- `sbp_post` (numerical)
+
+YOU should:
+
+- Identify the variables.
+
+- Use `count(data, sex)`.
+
+- Create a subset if needed.
+
+- Calculate group means.
+
+- Create a bar plot.
+
+- Interpret the results.

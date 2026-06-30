@@ -1,0 +1,363 @@
+---
+title: "Exploring a Clinical Trial Dataset"
+subtitle: "Session 2: Hypothesis testing"
+format:
+  html:
+    code-annotations: hover
+    code-fold: true
+    code-fold-label: "Show Code"
+    toc: true
+    toc-depth: 3
+    css: styles.css
+editor: visual
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+
+data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/main/datasets/sbp_demo.csv",
+  show_col_types = FALSE
+)
+
+bp_data <- data |>
+  filter(group %in% c("Placebo", "High Dose"))
+bp_data
+```
+
+## 1. Where we left off
+
+In Session 1 we found that the **High Dose** group had a lower average post-treatment blood pressure than the **Placebo** group.
+
+However, one important question remains.
+
+> Is this difference large enough that we can attribute it to the treatment, or could it simply have occurred by chance?
+
+To answer this question, we need a statistical test.
+
+## 2. Why do we need a hypothesis test?
+
+Although the High Dose group had a lower average post-treatment blood pressure than the Placebo group, averages calculated from a sample are rarely exactly the same as the averages in the whole population.
+
+A hypothesis test helps us decide whether the difference we observed is likely to reflect a real treatment effect or whether it could simply be due to random sampling variation.
+
+## 3. Choosing the right statistical test
+
+Researchers do not choose statistical tests at random.
+
+The choice depends on the research question and the type of data being analysed.
+
+::: callout-important
+## Think like a researcher
+
+Our research question is:
+
+> Do patients receiving the High Dose treatment have lower post-treatment systolic blood pressure than patients receiving the Placebo treatment?
+
+Ask yourself:
+
+- What is our outcome variable?
+- Is it numerical or categorical?
+- How many groups are we comparing?
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+| Variable | Description | Type | Role |
+|------------------|-------------------|------------------|------------------|
+| `sbp_post` | SBP after treatment | Numeric | Dependent variable (DV) |
+| `group` | Treatment group (Placebo / High Dose) | Categorical (2 levels) | Independent variable (IV) |
+
+Therefore, we need a statistical test that compares the means of two groups.
+:::
+
+::: {.callout-note appearance="simple" icon="info" title="What is an independent variable?"}
+It's the thing you're **grouping by or comparing across** — in this case, treatment group.
+:::
+
+::: {.callout-tip collapse="true"}
+### Summary Table of different test statistics for hypothesis testing
+
+| Research question | Variables | Test |
+|---------------------------|---------------------------|------------------|
+| Compare two group means | One numeric + one categorical (2 groups) | t-test |
+| Compare three or more group means | One numeric + one categorical (3+ groups) | ANOVA |
+| Compare two categorical variables | Two categorical | Chi-square |
+| Relationship between two numeric variables | Two numeric | Correlation |
+:::
+
+### The independent samples t-test
+
+The independent samples t-test compares the average value of a numerical variable between two independent groups.
+
+In our study:
+
+- numerical variable: `sbp_post`
+- groups: High Dose and Placebo
+
+This is exactly the type of research question that a t-test is designed to answer.
+
+> Example: Is systolic blood pressure (SBP) different for patients who took **High Dose Hypotensol** vs those who took **Placebo**?
+
+## 4. Writing the hypotheses
+
+- Every hypothesis test begins with a **research question**.
+
+- The hypotheses are derived directly from that research question.
+
+::: callout-tip
+- The research question tells us **what we want to investigate**.
+- The hypotheses translate that question into statements that we can test statistically.
+:::
+
+Our research question is:
+
+> Do patients receiving the **High Dose** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+
+From this research question, we can formulate two hypotheses.
+
+1.  The **null hypothesis** says there is no difference between the groups.
+
+2.  The **alternative hypothesis** says there is a difference, or that the difference goes in the direction predicted by the research question.
+
+::: example-box
+### Hypotheses for our research question
+
+**Null hypothesis (H₀):**\
+The High Dose and Placebo groups have the same average post-treatment systolic blood pressure.
+
+**Alternative hypothesis (H₁):**\
+The High Dose group has lower average post-treatment systolic blood pressure than the Placebo group.
+:::
+
+::: {.callout-note collapse="true"}
+## Why a one-sided t-test?
+
+There are two common types of independent samples t-test.
+
+### 1. One-sided t-test
+
+- A **one-sided t-test** is used when the research question predicts the **direction** of the difference.
+
+For example:
+
+> Do patients receiving the **High Dose** treatment have **lower** post-treatment blood pressure than patients receiving the **Placebo** treatment?
+
+Here, we are specifically predicting that the High Dose group will have **lower** blood pressure.
+
+### 2. Two-sided t-test
+
+- A **two-sided t-test** is used when we only want to know whether the groups are **different**, without predicting which group will have the higher or lower values.
+
+For example:
+
+> Is there a difference in post-treatment blood pressure between the High Dose and Placebo groups?
+
+This question does not predict the direction of the difference.
+
+### Which one are we using?
+
+Because our research question predicts that the **High Dose group will have lower blood pressure than the Placebo group**, we use a **one-sided t-test**.
+:::
+
+## 5. Running the t-test in R
+
+### Preparing the data
+
+- R compares the groups in the order they are stored.
+
+- To match our research hypothesis, we want R to compare:
+
+> **High Dose \< Placebo**
+
+The following code sets the groups in this order.
+
+So we set **High Dose** as the first group and **Placebo** as the second group.
+
+```{r}
+
+bp_data <- bp_data |>
+  mutate(
+    group = factor(
+      group,
+      levels = c("High Dose", "Placebo")
+    )
+  )
+```
+
+### Running the test
+
+> Test whether the **High Dose** group has a lower mean `sbp_post` than the **Placebo** group.
+
+```{r}
+t.test(
+  sbp_post ~ group,
+  data = bp_data,
+  alternative = "less"
+)
+```
+
+### Understanding the code
+
+- `sbp_post ~ group` tells R to compare post-treatment blood pressure across the treatment groups.
+
+- `data = bp_data` tells R to use the filtered dataset containing only High Dose and Placebo patients.
+
+- `alternative = "less"` tells R that our hypothesis is directional: we expect the High Dose group to have lower blood pressure than the Placebo group.
+
+::: {.callout-note collapse="true"}
+## Optional: Understanding the `~` symbol
+
+In R, the symbol `~` can be read as **"by"** or **"grouped by."**
+
+For example:
+
+```         
+sbp_post ~ group
+```
+
+can be read as:
+
+> Compare post-treatment systolic blood pressure **by** treatment group.
+:::
+
+## 6. Interpreting the t-test output
+
+Running `t.test()` produces several pieces of information.
+
+Before reading the explanation below, see if you can identify the following in the output:
+
+- the **group means**
+
+- the **t statistic**;
+
+- the **degrees of freedom (df)**
+
+- the **p-value**; and
+
+- the **confidence interval**.
+
+```{r}
+
+t.test(sbp_post ~ group,
+  data = bp_data,
+  alternative = "less")
+
+```
+
+**Where can you find each value?**
+
+| Output | What does it tell us? |
+|------------------------------------|------------------------------------|
+| `t` | The **t-statistic** |
+| `df` | The **degrees of freedom** |
+| `p-value` | Whether the difference is statistically significant |
+| `95 percent confidence interval` | A range of plausible values for the true difference between the group means |
+| `mean in group High Dose` | The average SBP for the High Dose group |
+| `mean in group Placebo` | The average SBP for the Placebo group |
+
+### Step 1: Compare the group means
+
+The output reports the mean post-treatment blood pressure for each group.
+
+- mean in group High Dose 125.12
+
+- mean in group Placebo 143.13
+
+**Question**
+
+Which treatment group has the lower average blood pressure?
+
+::: {.callout-tip collapse="true"}
+## Answer
+
+The **High Dose** group has the lower average post-treatment blood pressure.
+
+This agrees with the descriptive statistics we calculated in Session 1.
+:::
+
+### Step 2: Look at the p-value
+
+The p-value helps us decide whether the observed difference is likely to reflect a real treatment effect or whether it could simply be due to chance.
+
+::: {.callout-note appearance="simple"}
+### What is a p-value?
+
+The **p-value** tells us how compatible our data are with the idea that there is **no real difference** between the treatment groups.
+
+A **small p-value** suggests that the observed difference is unlikely to be explained by chance alone.
+:::
+
+The p-value from our analysis is:
+
+> **3.767 × 10⁻¹⁰**
+
+This is much smaller than **0.05**.
+
+::: {.callout-tip appearance="simple"}
+### Decision rule
+
+- If **p \< 0.05**, we reject the null hypothesis.
+
+- If **p ≥ 0.05**, we do not reject the null hypothesis.
+:::
+
+### Step 3: What about the other numbers?
+
+- The t-test output also reports a **t-statistic**, **degrees of freedom (df)** and a **confidence interval**.
+
+- These values are important because they are used to calculate and describe the statistical result.
+
+- For today's workshop, the **most important value to interpret is the p-value**, since it tells us whether the observed difference is statistically significant.
+
+::: {.callout-note collapse="true"}
+### Optional: What do these values mean?
+
+- **t-statistic** – measures how large the difference between the group means is relative to the variation in the data.
+
+- **Degrees of freedom (df)** – a value used when calculating the t-test.
+
+- **Confidence interval** – gives a range of plausible values for the true difference between the group means. Because we performed a **one-sided t-test**, R reports a one-sided confidence interval.
+:::
+
+## 7. Conclusion
+
+The t-test produced a **very small p-value** (`3.77 × 10⁻¹⁰`), which is much smaller than 0.05.
+
+Therefore, we reject the null hypothesis.
+
+The results provide strong evidence that patients receiving the **High Dose Hypotensol** treatment had lower average post-treatment systolic blood pressure than patients receiving the **Placebo** treatment.
+
+### Reporting results
+
+Researchers usually summarise their findings in a single sentence.
+
+For example:
+
+> An independent samples t-test found that patients in the High Dose group ($M = 125.12$) had significantly lower post-treatment systolic blood pressure than those in the Placebo group ($M = 143.13$), $t(57.44) = −7.36, p < .001$
+
+::: {.callout-note collapse="true"}
+### Understanding the reporting format
+
+Research papers often report:
+
+- $M$ = mean (average)
+
+- $SD$ = standard deviation
+
+- $t(df)$ = the t-statistic and its degrees of freedom
+
+- $p$ = the p-value
+
+This provides a concise summary of both the descriptive statistics (the group averages) and the inferential statistics (the hypothesis test).
+:::
+
+## 8. Key takeaway
+
+In Session 1, we used **descriptive statistics** to describe the data.
+
+In Session 2, we used **inferential statistics** to decide whether the observed difference between the treatment groups was statistically significant.
+
+Together, these steps form a typical workflow for analysing data in a clinical trial.

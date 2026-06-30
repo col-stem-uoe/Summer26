@@ -1,0 +1,42 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+
+website:
+  title: "Exploring Medical Data with R"
+  navbar:
+    pinned: true
+    background: "#C5004A"
+    left:
+      - text: "Home"
+        file: index.qmd
+
+      - text: "Getting Started"
+        file: Getting_started_with_RStudio.qmd
+
+      - text: "Session 1"
+        menu:
+          - text: "Exploring a Clinical Trial Dataset"
+            file: Exploring_a_Clinical_Trial_Dataset.qmd
+          - text: "Summary Statistics and Visualisation"
+            file: Clinical_trial_summary.qmd
+
+      - text: "Practice"
+        menu:
+          - text: "Day 1 Student Template"
+            file: student-templates/Session1_student_template_Clinical_Trial.Rmd
+          - text: "Independent Practice"
+            file: student-templates/Session1_do_it_yourself.Rmd
+
+  page-footer:
+    left: "© 2026 Javiera Alfaro – Centre for Open Learning, University of Edinburgh"
+    right: "Website created with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    css: styles.css
+    title-block: false

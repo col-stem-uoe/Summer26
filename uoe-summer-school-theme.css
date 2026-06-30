@@ -1,0 +1,208 @@
+
+/* --------------------------------------
+   UoE Summer School Styling – Refined Theme
+----------------------------------------- */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+/* Base body styling */
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: #ffffff;
+  color: #111111;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* --------------------------------------
+   Headings
+----------------------------------------- */
+h1 {
+  color: #C5004A;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+h2 {
+  background-color: #E6F0FA;
+  padding: 0.4rem 1rem;
+  border-left: 5px solid #003366;
+  color: #003366;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+h3 {
+  color: #003366;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 1.6rem;
+  border-bottom: 2px solid #003366;
+  padding: 0.6rem 1rem;
+  background-color: #F3F8FC;
+  border-radius: 4px;
+}
+
+h4 {
+  color: #444;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.2rem;
+  padding-left: 0.2rem;
+  border-left: 3px solid #003366;
+}
+
+/* --------------------------------------
+   Navbar – Pink
+----------------------------------------- */
+.navbar {
+  background-color: #C5004A !important;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar .navbar-brand {
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: white !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  letter-spacing: 0.4px;
+  margin-right: 40px;
+}
+
+.navbar .navbar-brand img {
+  height: 56px !important;
+  max-height: 56px !important;
+  width: auto !important;
+  margin-right: 20px;
+  padding-left: 8px;
+}
+
+.navbar-nav > li > a,
+.navbar .nav-link {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: white !important;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.navbar-nav > li > a:hover {
+  color: #FFD6E7 !important;
+}
+
+.navbar-nav {
+  gap: 20px;
+}
+
+.navbar-nav > li:last-child,
+.navbar-nav > li:nth-last-child(2) {
+  margin-left: auto;
+}
+
+/* --------------------------------------
+   Sidebar TOC
+----------------------------------------- */
+nav[aria-label="On this page"] > .sidebar-title {
+  color: #C5004A !important;
+}
+
+nav[aria-label="On this page"] a {
+  font-size: 0.95rem !important;
+  color: #444 !important;
+  font-weight: 500;
+}
+
+nav[aria-label="On this page"] a.active {
+  color: #C5004A !important;
+  font-weight: 700;
+  border-left: 3px solid #C5004A;
+}
+
+nav[aria-label="On this page"] a:hover {
+  color: #E54C80 !important;
+}
+
+/* --------------------------------------
+   Code Blocks
+----------------------------------------- */
+pre code {
+  display: block;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  color: #111111;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+code, td code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #003366;
+  background-color: #eaecef;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* --------------------------------------
+   Enhanced Syntax Highlighting – Student Friendly
+----------------------------------------- */
+.sourceCode {
+  font-size: 0.85rem;
+  background-color: #fdfdfd;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.sourceCode .co {
+  color: #7A7A7A;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.sourceCode .kw {
+  color: #AF00DB;
+  font-weight: 600;
+}
+
+.sourceCode .st {
+  color: #008000;
+}
+
+.sourceCode .dv {
+  color: #D16969;
+  font-weight: 500;
+}
+
+.sourceCode .fu {
+  color: #007ACC;
+  font-weight: 500;
+}
+
+.sourceCode .va {
+  color: #C18401;
+  font-weight: 500;
+}
+
+.sourceCode .op {
+  color: #111111;
+}
+
+/* --------------------------------------
+   Footer
+----------------------------------------- */
+.footer {
+  font-size: 0.85rem;
+  background-color: #f9f9f9;
+  color: #444;
+  padding: 10px 20px;
+  border-top: 1px solid #e0e0e0;
+}

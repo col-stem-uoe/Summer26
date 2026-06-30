@@ -1,0 +1,112 @@
+---
+title: "Worked Example"
+format:
+  html:
+    code-annotations: hover
+    code-fold: true
+    code-fold-label: "Show Code"
+    toc: true
+    toc-depth: 3
+    css: styles.css
+editor: visual
+---
+
+# 🎓 Worked Example: Analysing Real Data
+
+This example walks through a complete analysis using real clinical data.\
+We’ll guide you step by step — from research question to final interpretation — using clear code, plots, and explanations.
+
+------------------------------------------------------------------------
+
+## Dataset: `sbp_demo.csv`
+
+The dataset is a fictional simulation of a clinical trial testing a blood pressure treatment.
+
+- **Treatment groups**:
+  - Placebo\
+  - Low Dose Hypotensol (25mg)\
+  - High Dose Hypotensol (50mg)
+- **Outcome variable**:
+  - `sbp_post`: Systolic Blood Pressure **after treatment** (mmHg)
+
+------------------------------------------------------------------------
+
+### 🎯 Research Question
+
+> Does the **dose of treatment** affect post-treatment systolic blood pressure?
+
+------------------------------------------------------------------------
+
+## Step 1: Load and Prepare Data
+
+```{r}
+library(tidyverse)
+
+# Load the dataset
+sbp_demo <- read_csv("sbp_demo.csv")
+
+# Preview
+glimpse(sbp_demo)
+```
+
+## Step 2: Summary Statistics by Group
+
+```{r}
+# Summarise post-treatment SBP by group
+summary_table <- sbp_demo |>
+  group_by(group) |>
+  summarise(
+    n = n(),
+    mean = round(mean(sbp_post), 1),
+    median = round(median(sbp_post), 1),
+    sd = round(sd(sbp_post), 1),
+    min = round(min(sbp_post), 1),
+    max = round(max(sbp_post), 1)
+  )
+
+summary_table
+
+```
+
+## Step 3: Visualise the Data
+
+```{r}
+# Boxplot of post-treatment SBP by group
+ggplot(sbp_demo, aes(x = group, y = sbp_post)) +
+  geom_boxplot(fill = "#C5004A", alpha = 0.6) +
+  labs(title = "Post-Treatment SBP by Group",
+       x = "Treatment Group", y = "SBP (mmHg)") +
+  theme_minimal(base_size = 14)
+
+```
+
+## Step 4: Run a One-Way ANOVA
+
+```{r}
+# Run the ANOVA model
+anova_result <- aov(sbp_post ~ group,data = sbp_demo)                           
+anova_result
+summary(anova_result)                          
+```
+
+```{r}
+# Tukey HSD to compare pairs of groups
+TukeyHSD(anova_result)
+
+```
+
+## Step 6: Interpretation
+
+::: {.callout-note appearance="simple" icon="info" title="🧠 Summary of Results"}
+There was a statistically significant difference between groups (p \< .001). The High Dose group had significantly lower SBP than both Placebo and Low Dose. This suggests the treatment is effective, especially at higher doses.
+:::
+
+## ✅ Key Takeaways
+
+- We used ANOVA to compare **mean SBP** across 3 treatment groups.
+
+- We followed up with **Tukey’s test** to identify where the differences lie.
+
+- Visualisations helped us understand the spread and pattern in the data.
+
+- Clear statistical reporting supports strong scientific communication.

@@ -1,0 +1,474 @@
+---
+title: "Exploring a Clinical Trial Dataset"
+subtitle: "Session 1"
+format:
+  html:
+    code-annotations: hover
+    code-fold: true
+    code-fold-label: "Show Code"
+    toc: true
+    toc-depth: 3
+    css: styles.css
+editor: visual
+---
+```{r setup, include=FALSE}
+
+library(tidyverse)
+```
+
+
+
+# Exploring a Clinical Trial Dataset
+
+In this activity, you will use R to explore data from a fictional clinical trial investigating a new blood pressure medication called **Hypotensol**. You will answer a research question by identifying the relevant variables, summarising the data, and creating simple visualisations.
+
+## Background
+
+High blood pressure is a major risk factor for cardiovascular disease. Researchers have developed a new medication called **Hypotensol** and want to determine whether it reduces blood pressure more effectively than a placebo.
+
+To investigate this, they conducted a randomised clinical trial.
+
+::: highlight
+### Research question
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+:::
+
+## Dataset
+
+To answer this question, we will analyse data from a fictional clinical trial involving **90 patients** with high blood pressure.
+
+Participants were randomly assigned to one of three treatment groups:
+
+1.  Placebo
+2.  Low Dose Hypotensol (25 mg)
+3.  High Dose Hypotensol (50 mg)
+
+Patients were recruited from:
+
+- NHS Lothian
+
+- NHS Greater Glasgow
+
+### Variables in the Dataset
+
+| Variable Name | Description |
+|-------------------------------|-----------------------------------------|
+| `id` | Patient ID number (anonymised unique identifier) |
+| `group` | Treatment group (Placebo / Low Dose / High Dose) |
+| `sbp_pre` | Systolic blood pressure before treatment (mmHg) |
+| `sbp_post` | Systolic blood pressure after treatment (mmHg) |
+| `improved` | Did the patient improve? (Yes / No) |
+| `age` | Age of patient in years |
+| `sex` | Sex of patient (Male / Female) |
+| `weight_kg` | Weight at baseline in kilograms |
+| `bmi` | Body Mass Index (kg/m²) |
+| `drug` | Drug administered (Hypotensol / None) |
+| `dose_mg` | Dose of drug administered in milligrams |
+| `post_check_weeks` | Weeks after treatment when post-treatment BP was measured |
+| `home_sbp_avg` | Average home blood pressure reading after treatment (mmHg) |
+| `followup_1y` | 1-year follow-up status (Completed / Missed) |
+| `clinic` | NHS clinic where the patient was treated |
+
+::: definition-box
+### Researcher's mindset
+
+Every statistical analysis begins with a research question. The research question determines:
+
+- which variables we need;
+
+- whether those variables are categorical or numerical; and
+
+- which statistical methods are appropriate.
+:::
+
+::: checklist-box
+### Learning objectives
+
+By the end of this activity, you should be able to:
+
+- import a dataset into R;
+
+- inspect the structure of a dataset;
+
+- identify categorical and numerical variables;
+
+- use R to summarise and visualise data;
+
+- interpret descriptive statistics in the context of a research question.
+:::
+
+::: example-box
+### Identifying the variables
+
+Before opening R, let's return to our research question.
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+
+Read the question carefully.
+
+**Which variables from the dataset do we need to answer it?**
+
+> Ask yourself:
+>
+> - Which variable tells us **who received each treatment**?
+> - Which variable contains the **outcome we want to compare**?
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+From the table above, we can identify two key variables.
+
+| Variable | Why do we need it? | Type |
+|--------------------|----------------------------------|------------------|
+| `group` | Identifies which treatment each patient received (Placebo, Low Dose or High Dose). | Categorical |
+| `sbp_post` | Records each patient's post-treatment systolic blood pressure. | Numerical |
+
+Notice that we do **not** need every variable in the dataset.
+:::
+
+# Working in RStudio
+
+Now that we know the research question and have identified the variables we need, it's time to begin the analysis in **RStudio**.
+
+Let's open [**Getting Started with RStudio**](Getting_started_with_RStudio.html) guide before continuing.
+
+Throughout this activity, you will work in a downloadable **R Markdown (`.Rmd`) template**. The template contains the code and exercises we will complete together during the session.
+
+::: checklist-box
+### Getting Started
+
+Before we begin:
+
+1.  📥 **Download the [Day 1 Student Template (.Rmd)](student-templates/Session1_student_template_Clinical_Trial.Rmd).**
+2.  Save it in a folder such as **Documents → Summer School 2026**.
+3.  Open the file in **RStudio**.
+4.  Keep both this webpage and RStudio open during the session.
+:::
+
+::: definition-box
+### How will we use the template?
+
+The template is your working document for today's session.
+
+As we move through the activity, you will:
+
+- run the code provided in each section;
+- observe and interpret the output produced by R;
+- answer short questions about the results; and
+- complete a few "Your Turn" exercises by writing your own code.
+
+By the end of the session, you will have a completed analysis that you can save and use as a reference.
+:::
+
+## Step 1: Import the Dataset
+
+> Before we can analyse the data, we first need to import it into R.
+
+The first step is to import the dataset into R.
+
+The dataset is stored online as a **CSV** file, so R can read it directly from the web.
+
+```{r}
+library(tidyverse)
+
+data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/main/datasets/sbp_demo.csv",
+  show_col_types = FALSE
+)
+```
+
+## Step 2: Did R import the data correctly?
+
+```{r}
+head(data)
+```
+
+Questions:
+
+- What is the number of rows and columns?
+
+- What does one row represent?
+
+- What does one column represent?
+
+Then look at :
+
+- `<chr>` = text (categorical variable)
+
+- `<dbl>` = number (numerical variable)
+
+## Step 3: What variables might answer our research question?
+
+### Research question:
+
+> Do patients receiving the High Dose Hypotensol treatment have lower post-treatment systolic blood pressure than patients receiving the Placebo treatment?
+
+Which variable tells us:
+
+- treatment group?
+
+- post-treatment blood pressure?
+
+```{r}
+
+library(DT)
+
+DT::datatable(
+  data,
+  rownames = FALSE,
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: bold;",
+    "Clinical trial dataset"
+  ),
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    autoWidth = TRUE
+  )
+)
+
+```
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+From the table above, we can identify two key variables.
+
+| Variable | Why do we need it? | Type |
+|--------------------|----------------------------------|------------------|
+| `group` | Identifies which treatment each patient received (Placebo, Low Dose or High Dose). | Categorical |
+| `sbp_post` | Records each patient's post-treatment systolic blood pressure. | Numerical |
+
+Notice that we do **not** need every variable in the dataset.
+:::
+
+## Step 4: How many patients are in each treatment group?
+
+### Count how many patients are in each treatment group.
+
+The function`count()`
+
+- counts how many observations belong to each category of the variable `group`.
+
+- mainly used with **categorical variables**.
+
+In our dataset, the variable `group` contains the treatment assigned to each patient:
+
+- Placebo
+
+- Low Dose
+
+- High Dose
+
+#### The syntax
+
+```         
+count(dataset, variable)
+```
+
+where:
+
+- `dataset` = the dataset we want to analyse;
+
+- `variable` = the categorical variable we want to count.
+
+#### In our example
+
+```{r}
+count(data, group)
+```
+
+- `count()` = count the number of observations
+
+- `data` = the dataset we want to analyse
+
+- `group` = the variable we want to count
+
+- `n` = shows the number of patients in each group
+
+#### Interpreting the output: Why is this useful?
+
+The output shows the number of patients in each treatment group.
+
+Before analysing data, researchers often ask
+
+- How many patients are in each treatment group?
+- Are the treatment groups balanced?
+- Are any treatment groups missing?
+
+In this clinical trial, each treatment group contains \*\*30 patients\*\*, so the groups are perfectly balanced.
+
+### Your turn! Explore another categorical variable
+
+Use the `count()` function to find out how many males and females are in the dataset.
+
+```{r}
+# Write your code here
+```
+
+**Questions**\
+\
+- How many males are in the dataset?\
+\
+- How many females are in the dataset?\
+\
+- Are there roughly equal numbers of males and females in the dataset?
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+```{r}
+count(data, sex)
+```
+:::
+
+## Step 5: Create a new dataset (subset) for our research question
+
+Let's return to our research question:
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+
+Our dataset contains **three** treatment groups:
+
+- Placebo
+
+- Low Dose
+
+- High Dose
+
+However, our research question only compares **High Dose** and **Placebo**.
+
+Therefore, before analysing the data, we will create a **new dataset** containing only the patients relevant to our research question.
+
+### The `filter()` function
+
+The `filter()` function selects only the rows that satisfy a condition.
+
+#### The syntax
+
+```         
+filter(variable == value)
+```
+
+or, when keeping multiple values,
+
+```         
+filter(variable %in% c(value1, value2))
+```
+
+#### In our example
+
+**The filter() function allows us to select observations that meet specific conditions.**
+
+```{r}
+bp_data <- data |>
+  filter(group %in% c("Placebo", "High Dose"))
+bp_data
+```
+
+We can read this code as: Take the dataset `data`, keep only the patients in the Placebo and High Dose groups, and store the result in a new dataset called `bp_data`.
+
+### Reading the code
+
+Let's read the code from left to right.
+
+- `data` = start with the original dataset.
+
+- `|>` = pass the dataset to the next function.
+
+- `filter()` = keep only the rows that satisfy our condition.
+
+- `group %in% c("Placebo", "High Dose")` = keep only patients in the **Placebo** or **High Dose** treatment groups.
+
+- `bp_data <-` = store the filtered dataset in a new object called `bp_data`.
+
+::: column-margin
+#### The Assignment Operator: `<-`
+
+- The symbol `<-` means: Store the result on the right-hand side in the object on the left-hand side.
+
+- In our analysis : `bp_data <- data` means " Create a new object called `bp_data` and store the dataset `data` inside it."
+:::
+
+::: column-margin
+#### The Pipe Operator: `|>`
+
+- The symbol `|>` is called the **pipe operator**.
+
+- it means: Take the result from the left and pass it to the function on the right.
+
+```{r}
+ data |>
+    count(group)
+```
+
+can be read as:
+
+> Take the dataset `data` and count the number of observations in each treatment group.
+:::
+
+### Why is this useful?
+
+- Researchers rarely analyse every observation in a dataset.
+
+- Instead, they select the subset of data that answers their research question.
+
+- In this example, the **Low Dose** group is not relevant because our research question compares only the **High Dose** and **Placebo** groups.
+
+## Step 6: Comparing Treatment Groups
+
+Let's return to our research question:
+
+> Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
+
+To answer this question, we are comparing:
+
+- a **categorical variable** (`group`), which identifies the treatment each patient received; and
+
+- a **numerical variable** (`sbp_post`), which records each patient's post-treatment systolic blood pressure.
+
+In the previous step, we created a new dataset called `bp_data`, which contains only the **High Dose** and **Placebo** groups. These are the only patients relevant to our research question.
+
+**What should we calculate now?**
+
+::: callout-important
+## Think like a researcher
+
+We want to compare the **High Dose** and **Placebo** groups.
+
+Each patient has a post-treatment blood pressure value.
+
+**What information would help you compare these two groups?**
+
+Take a moment to think before looking at the solution.
+:::
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+To compare the two groups, it is useful to know:
+
+- how many patients are in each group;
+- the average post-treatment blood pressure; and
+- whether blood pressure values vary a lot within each group.
+
+We can calculate these using summary statistics.
+:::
+
+------------------------------------------------------------------------
+
+::: callout-tip
+## Continue to the next activity
+
+You have now:
+
+- identified the variables needed to answer the research question;
+- explored the dataset;
+- counted observations in categorical variables; and
+- created a dataset containing only the treatment groups of interest.
+
+**Next:**\
+[**Summary Statistics and Visualisation**](Clinical_trial_summary.html)
+:::

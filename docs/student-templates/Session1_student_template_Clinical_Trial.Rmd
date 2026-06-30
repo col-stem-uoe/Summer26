@@ -1,0 +1,191 @@
+---
+title: "Exploring a Clinical Trial Dataset"
+author: "UoE Summer School 2026 Team "
+date: "2026"
+---
+# Part 1: Exploring the Dataset
+
+## Importing the data set
+
+```{r}
+library(tidyverse)
+
+data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/main/datasets/sbp_demo.csv",
+  show_col_types = FALSE
+)
+
+```
+
+We have imported the dataset, but how do we know R has read it correctly?
+
+## Step 1: Look at the first few rows
+
+```{r}
+
+head(data)
+```
+
+- What does each row represent?
+
+- What does each column represent?
+
+## Step 2: Ask R about the dataset
+
+```{r}
+
+glimpse(data)
+```
+
+- What is the number of rows and columns?
+
+- What do you think these represent?
+
+Then look at :
+
+- `<chr>` = text (categorical variable)
+
+- `<dbl>` = number (numerical variable)
+
+## Step 3: What variables might answer our research question?
+
+### Research question:
+
+> Do patients receiving the High Dose Hypotensol treatment have lower post-treatment systolic blood pressure than patients receiving the Placebo treatment?
+
+Which variable tells us:
+
+- treatment group?
+
+- post-treatment blood pressure?
+
+## Step 4: Count treatment groups
+
+### Count how many patients are in each treatment group.
+
+The function`count()`
+
+- counts how many observations belong to each category of the variable `group`.
+
+- mainly used with **categorical variables**.
+
+```{r}
+count(data, group)
+```
+
+- `count()` = count the number of observations
+
+- `data` = the dataset we want to analyse
+
+- `group` = the variable we want to count
+
+- `n` = shows the number of patients in each group
+
+### Why is this useful?
+
+Before analysing data, researchers often want to know:
+
+- How many observations are in each category?
+
+- Are the groups balanced?
+
+- Are any categories missing?
+
+
+### Your turn! Explore another categorical variable
+
+Use the `count()` function to find out how many males and females are in the dataset.
+
+```{r}
+# Write your code here
+```
+
+**Questions**\
+\
+- How many males are in the dataset?\
+\
+- How many females are in the dataset?\
+\
+- Are there roughly equal numbers of males and females in the dataset?
+
+## Step 5: Filter High Dose and Placebo
+
+Now we return directly to the research question:
+
+> Do patients receiving the High Dose Hypotensol treatment have lower post-treatment systolic blood pressure than patients receiving the Placebo treatment?
+
+Our research question compares the **High Dose** and **Placebo** groups. Do we need all three treatment groups?
+
+
+### Creating a Subset
+
+**The filter() function allows us to select observations that meet specific conditions.**
+
+```{r}
+bp_data <- data |>
+  filter(group %in% c("Placebo", "High Dose"))
+bp_data
+```
+
+
+# Part 2: Summary Statistics and Visualisation
+
+We have created `bp_data`, which contains only the High Dose and Placebo groups.
+
+In the next activity, we will use this dataset to calculate summary statistics and create a graph.
+
+## (1) Calculate Summary Statistics for Each Group
+
+```{r}
+group_summary <- bp_data |>
+  group_by(group) |>
+  summarise(
+    n = n(),
+    Mean_SBP = mean(sbp_post),
+    SD_SBP = sd(sbp_post)
+  )
+
+group_summary
+```
+
+- The `group_by()` function tells R to split the dataset into groups based on the variable `group`.
+
+- The `summarise()` function calculates summary statistics for each group.
+
+  - Here we calculate:
+    - `n()` = number of patients in each treatment group
+    - `mean()` = average post-treatment blood pressure
+    - `sd()` = standard deviation, which measures how spread out the blood pressure values are
+
+**Questions**
+
+- Which group has the lower mean blood pressure?
+
+- How many patients are in each group?
+
+- Which group shows more variability in blood pressure values?
+
+
+
+## (2) Plotting group means
+
+```{r}
+ggplot(group_summary,
+       aes(x = group,
+           y = Mean_SBP)) +
+  geom_col()
+```
+
+
+
+### Interpreting the Plot
+
+The mean post-treatment blood pressure is:
+
+-      for the High Dose group
+
+-       for the Placebo group
+
+
+
+

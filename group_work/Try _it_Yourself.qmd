@@ -1,0 +1,127 @@
+---
+title: "Try It Yourself"
+format:
+  html:
+    self-contained: true
+    code-annotations: hover
+    code-fold: true
+    code-fold-label: "Show Code"
+    css: styles.css
+editor: visual
+---
+
+# 🧪 Try It Yourself: Test a Hypothesis
+
+Now it’s your turn to apply what you’ve learned!
+
+In the activities below, you’ll explore real clinical datasets and run statistical tests to answer research questions — just like a real analyst or health researcher.
+
+------------------------------------------------------------------------
+
+## 📦 Dataset 1: `strep_tb`
+
+This dataset comes from a 1948 clinical trial testing **streptomycin** for treating tuberculosis. It includes:
+
+- **Treatment group**:
+  - `control`: standard bed rest\
+  - `streptomycin`: bed rest + new antibiotic treatment
+- **Outcome variables**:
+  - `rad_num`: Radiologic score (1–6, based on X-ray damage)\
+  - `improved`: TRUE if `rad_num` ≥ 5
+
+### 🧾 Other useful variables
+
+| Variable  | Description                              |
+|-----------|------------------------------------------|
+| `age`     | Patient age                              |
+| `sex`     | Patient sex (male/female)                |
+| `arm`     | Treatment group (Streptomycin / Control) |
+| `outcome` | Clinical outcome based on radiology      |
+
+------------------------------------------------------------------------
+
+## 🧪 t-Test: Compare Group Means {.callout-tip title="① t-Test: Compare Group Means"}
+
+> **Research Question:**\
+> Do radiologic scores differ between the treatment and control groups?
+
+This test compares **numeric outcomes** between two independent groups.
+
+▶️ [**Try It Yourself: t-Test**](https://jalfaro.shinyapps.io/try-it-yourself-t-test/){.btn .btn-outline-pink}
+
+------------------------------------------------------------------------
+
+## 🔲 Chi-square: Categorical Association {.callout-warning title="② Chi-square: Categorical Association"}
+
+> **Research Question:**\
+> Is there a relationship between treatment group and improvement outcome?
+
+This test examines the association between **two categorical variables**.
+
+▶️ [**Try It Yourself: Chi-square**](https://jalfaro.shinyapps.io/try-it-yourself-chi-square/){.btn .btn-outline-pink}
+
+------------------------------------------------------------------------
+
+## 📦 Dataset 2: `smartpill`
+
+This dataset comes from a modern study using the **SmartPill capsule** to measure digestion time through the gastrointestinal tract.
+
+- **Participants**:
+  - 87 healthy adults\
+  - 22 critically ill patients\
+- **Key measures**:
+  - `GE.Time`: Gastric emptying time (hrs)\
+  - `WG.Time`: Whole gut transit time (hrs)
+
+### 🧾 Other useful variables
+
+| Variable | Description                     |
+|----------|---------------------------------|
+| `Group`  | 1 = Healthy, 0 = Critically ill |
+| `Gender` | 0 = Female, 1 = Male            |
+| `Age`    | Age in years                    |
+| `Weight` | Weight in kilograms             |
+
+------------------------------------------------------------------------
+
+## 🔗 Correlation: Two Numeric Variables {.callout-note title="③ Correlation: Two Numeric Variables"}
+
+> **Research Question:**\
+> Do people who take longer to empty their stomach also take longer to digest food overall?
+
+This test checks the **strength and direction of association** between two numeric variables.
+
+▶️ [**Try It Yourself: Correlation**](https://jalfaro.shinyapps.io/try-it-yourself-correlation/){.btn .btn-outline-pink}
+
+------------------------------------------------------------------------
+
+## ✅ Self-Assessment: What Have You Learned?
+
+Use this checklist to reflect on your progress.
+
+::: checklist-box
+### 🧪 t-Test
+
+- [ ] I know when to use a t-test\
+- [ ] I can compare the means of two groups\
+- [ ] I can interpret the *t*-statistic, *p*-value\
+- [ ] I can report t-test results using correct notation
+
+------------------------------------------------------------------------
+
+### 🔲 Chi-square Test
+
+- [ ] I can summarise categorical outcomes in a contingency table\
+- [ ] I understand how to run a Chi-square test of independence\
+- [ ] I know what a significant association tells us about two variables\
+- [ ] I can report the test statistic, degrees of freedom, and *p*-value
+
+------------------------------------------------------------------------
+
+### 🔗 Correlation
+
+- [ ] I understand when to use Pearson’s correlation\
+- [ ] I can describe the **direction**, **strength**, and **significance** of *r*\
+- [ ] I know that correlation ≠ causation\
+- [ ] I can interpret *r* and *p*-value
+:::

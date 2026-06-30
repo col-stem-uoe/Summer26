@@ -1,0 +1,91 @@
+id,group,sbp,improved,age,sex,weight_kg,bmi,drug,dose_mg,post_check_weeks,home_sbp_avg,followup_1y,clinic
+1,Placebo,150.0,No,46.0,Male,77.8,28.3,None,0,6,143.8,Completed,NHS Greater Glasgow
+2,Placebo,143.6,No,54.7,Female,77.1,25.9,None,0,6,129.7,Completed,NHS Lothian
+3,Placebo,151.5,No,38.0,Male,61.2,21.1,None,0,4,152.7,Completed,NHS Greater Glasgow
+4,Placebo,160.2,No,41.7,Female,57.0,17.7,None,0,5,152.3,Completed,NHS Lothian
+5,Placebo,142.7,No,41.1,Male,77.0,28.4,None,0,4,139.8,Missed,NHS Greater Glasgow
+6,Placebo,142.7,No,30.4,Female,64.7,20.1,None,0,6,144.5,Completed,NHS Greater Glasgow
+7,Placebo,160.8,No,48.0,Male,74.5,26.5,None,0,5,152.9,Completed,NHS Lothian
+8,Placebo,152.7,No,47.6,Female,68.6,21.5,None,0,4,150.1,Completed,NHS Lothian
+9,Placebo,140.3,No,45.1,Male,53.5,19.1,None,0,5,144.9,Completed,NHS Lothian
+10,Placebo,150.4,No,42.7,Female,79.3,29.5,None,0,5,135.1,Completed,NHS Lothian
+11,Placebo,140.4,No,30.8,Male,70.0,19.6,None,0,5,133.3,Completed,NHS Lothian
+12,Placebo,140.3,No,40.8,Female,76.0,23.3,None,0,4,132.8,Completed,NHS Greater Glasgow
+13,Placebo,147.4,No,41.6,Female,64.3,27.8,None,0,5,143.5,Completed,NHS Greater Glasgow
+14,Placebo,125.9,Yes,37.0,Female,71.0,25.9,None,0,5,122.6,Completed,NHS Lothian
+15,Placebo,127.8,Yes,43.4,Male,93.7,28.3,None,0,6,119.4,Missed,NHS Lothian
+16,Placebo,139.4,No,49.0,Female,76.5,30.6,None,0,5,133.1,Completed,NHS Lothian
+17,Placebo,134.9,Yes,63.9,Male,81.6,25.8,None,0,6,128.0,Completed,NHS Lothian
+18,Placebo,148.1,No,46.7,Female,59.7,19.1,None,0,5,143.4,Missed,NHS Greater Glasgow
+19,Placebo,135.9,No,47.6,Male,103.7,39.0,None,0,5,134.0,Completed,NHS Lothian
+20,Placebo,130.9,Yes,44.3,Female,97.1,33.6,None,0,6,132.4,Completed,NHS Lothian
+21,Placebo,159.7,No,25.8,Male,91.4,41.1,None,0,5,161.9,Missed,NHS Greater Glasgow
+22,Placebo,142.7,No,44.7,Male,84.9,24.1,None,0,4,143.0,Completed,NHS Lothian
+23,Placebo,145.7,No,45.6,Female,75.2,27.0,None,0,4,138.3,Completed,NHS Greater Glasgow
+24,Placebo,130.8,Yes,69.6,Male,80.3,25.3,None,0,6,127.7,Completed,NHS Greater Glasgow
+25,Placebo,139.6,No,43.1,Male,87.6,28.2,None,0,5,148.4,Completed,NHS Greater Glasgow
+26,Placebo,146.1,No,48.0,Female,67.5,20.0,None,0,6,148.2,Completed,NHS Greater Glasgow
+27,Placebo,133.5,Yes,44.7,Male,69.7,25.4,None,0,4,128.3,Completed,NHS Greater Glasgow
+28,Placebo,148.8,No,33.3,Male,55.0,18.6,None,0,4,153.7,Missed,NHS Lothian
+29,Placebo,139.0,No,56.4,Male,65.7,21.3,None,0,4,134.1,Completed,NHS Lothian
+30,Placebo,142.1,No,52.5,Female,94.9,29.7,None,0,5,135.7,Completed,NHS Greater Glasgow
+31,Low Dose,129.0,Yes,52.9,Male,71.0,21.5,Hypotensol,25,5,133.0,Completed,NHS Lothian
+32,Low Dose,153.5,No,35.9,Female,71.2,26.1,Hypotensol,25,5,144.0,Completed,NHS Greater Glasgow
+33,Low Dose,134.9,Yes,59.0,Male,78.8,29.5,Hypotensol,25,5,122.3,Completed,NHS Greater Glasgow
+34,Low Dose,124.4,Yes,31.0,Male,55.7,16.5,Hypotensol,25,6,126.1,Completed,NHS Greater Glasgow
+35,Low Dose,143.2,No,50.9,Male,86.3,38.5,Hypotensol,25,5,140.4,Completed,NHS Greater Glasgow
+36,Low Dose,122.8,Yes,66.9,Female,90.2,26.2,Hypotensol,25,5,120.4,Completed,NHS Lothian
+37,Low Dose,137.1,No,35.1,Male,79.5,28.5,Hypotensol,25,6,132.3,Missed,NHS Greater Glasgow
+38,Low Dose,115.4,Yes,39.3,Male,94.8,32.8,Hypotensol,25,5,111.2,Completed,NHS Lothian
+39,Low Dose,121.7,Yes,46.0,Female,59.1,22.2,Hypotensol,25,5,116.4,Completed,NHS Lothian
+40,Low Dose,137.0,No,40.0,Male,97.1,33.8,Hypotensol,25,6,130.8,Completed,NHS Greater Glasgow
+41,Low Dose,142.4,No,29.5,Female,66.2,19.8,Hypotensol,25,6,137.5,Completed,NHS Lothian
+42,Low Dose,136.7,No,45.7,Female,59.6,18.9,Hypotensol,25,4,131.6,Completed,NHS Lothian
+43,Low Dose,133.8,Yes,34.4,Male,72.2,23.6,Hypotensol,25,6,126.7,Completed,NHS Lothian
+44,Low Dose,132.0,Yes,49.7,Female,97.5,33.4,Hypotensol,25,5,126.3,Completed,NHS Lothian
+45,Low Dose,120.2,Yes,35.8,Male,74.8,30.9,Hypotensol,25,4,104.7,Completed,NHS Greater Glasgow
+46,Low Dose,127.8,Yes,60.5,Female,63.8,24.4,Hypotensol,25,5,128.2,Completed,NHS Lothian
+47,Low Dose,130.4,Yes,37.2,Female,59.5,21.4,Hypotensol,25,6,129.3,Completed,NHS Greater Glasgow
+48,Low Dose,145.6,No,41.8,Male,73.7,24.2,Hypotensol,25,5,142.1,Completed,NHS Lothian
+49,Low Dose,138.4,No,53.1,Female,51.1,17.5,Hypotensol,25,5,136.6,Completed,NHS Greater Glasgow
+50,Low Dose,117.4,Yes,32.7,Female,59.4,18.4,Hypotensol,25,5,115.7,Completed,NHS Greater Glasgow
+51,Low Dose,138.2,No,47.3,Female,93.5,30.6,Hypotensol,25,4,131.6,Completed,NHS Greater Glasgow
+52,Low Dose,131.1,Yes,58.1,Female,90.9,31.3,Hypotensol,25,4,125.5,Completed,NHS Greater Glasgow
+53,Low Dose,128.2,Yes,28.9,Female,73.5,19.8,Hypotensol,25,4,127.9,Completed,NHS Greater Glasgow
+54,Low Dose,141.1,No,46.8,Male,69.4,22.9,Hypotensol,25,4,139.2,Completed,NHS Greater Glasgow
+55,Low Dose,145.3,No,47.6,Female,75.7,27.6,Hypotensol,25,4,152.5,Missed,NHS Greater Glasgow
+56,Low Dose,144.3,No,52.8,Male,103.2,29.0,Hypotensol,25,4,149.4,Completed,NHS Lothian
+57,Low Dose,126.6,Yes,32.6,Female,79.9,24.1,Hypotensol,25,5,128.3,Completed,NHS Lothian
+58,Low Dose,131.9,Yes,31.8,Male,85.9,24.3,Hypotensol,25,4,125.1,Completed,NHS Greater Glasgow
+59,Low Dose,138.3,No,50.2,Male,72.6,25.5,Hypotensol,25,5,132.5,Missed,NHS Greater Glasgow
+60,Low Dose,144.8,No,48.0,Female,75.7,23.4,Hypotensol,25,6,136.7,Completed,NHS Greater Glasgow
+61,High Dose,120.2,Yes,47.5,Female,82.8,34.3,Hypotensol,50,5,118.6,Completed,NHS Lothian
+62,High Dose,123.1,Yes,48.5,Female,76.5,24.2,Hypotensol,50,5,106.4,Completed,NHS Lothian
+63,High Dose,113.9,Yes,38.2,Male,52.2,18.4,Hypotensol,50,4,108.6,Completed,NHS Greater Glasgow
+64,High Dose,113.0,Yes,47.3,Female,90.4,36.9,Hypotensol,50,4,108.5,Completed,NHS Greater Glasgow
+65,High Dose,133.1,Yes,47.9,Male,67.6,20.8,Hypotensol,50,4,122.5,Missed,NHS Greater Glasgow
+66,High Dose,138.6,No,37.9,Male,100.3,43.5,Hypotensol,50,4,139.6,Missed,NHS Greater Glasgow
+67,High Dose,124.3,Yes,63.7,Male,83.2,36.6,Hypotensol,50,4,115.6,Completed,NHS Lothian
+68,High Dose,135.0,No,49.7,Female,75.9,25.2,Hypotensol,50,4,133.4,Completed,NHS Lothian
+69,High Dose,128.6,Yes,33.1,Female,80.3,26.0,Hypotensol,50,4,139.5,Missed,NHS Lothian
+70,High Dose,118.5,Yes,51.6,Male,73.7,22.8,Hypotensol,50,4,107.5,Completed,NHS Lothian
+71,High Dose,128.6,Yes,35.3,Male,69.2,22.0,Hypotensol,50,5,124.9,Completed,NHS Greater Glasgow
+72,High Dose,140.4,No,52.9,Female,77.5,22.7,Hypotensol,50,4,135.3,Completed,NHS Greater Glasgow
+73,High Dose,124.6,Yes,56.6,Male,85.6,27.3,Hypotensol,50,5,118.6,Completed,NHS Lothian
+74,High Dose,140.6,No,36.8,Female,69.4,24.4,Hypotensol,50,5,141.4,Completed,NHS Greater Glasgow
+75,High Dose,98.8,Yes,54.6,Male,67.5,23.6,Hypotensol,50,5,101.3,Completed,NHS Greater Glasgow
+76,High Dose,133.2,Yes,49.1,Female,70.7,25.3,Hypotensol,50,4,134.1,Missed,NHS Greater Glasgow
+77,High Dose,125.9,Yes,53.2,Male,86.4,28.9,Hypotensol,50,6,119.3,Missed,NHS Lothian
+78,High Dose,122.0,Yes,64.0,Female,92.4,36.5,Hypotensol,50,5,131.2,Completed,NHS Lothian
+79,High Dose,125.9,Yes,42.5,Male,79.3,26.4,Hypotensol,50,4,114.1,Completed,NHS Lothian
+80,High Dose,105.1,Yes,37.5,Female,82.0,28.7,Hypotensol,50,6,97.0,Missed,NHS Lothian
+81,High Dose,122.8,Yes,36.1,Female,67.4,22.6,Hypotensol,50,6,120.7,Completed,NHS Greater Glasgow
+82,High Dose,128.6,Yes,36.8,Male,85.5,28.6,Hypotensol,50,4,126.0,Completed,NHS Lothian
+83,High Dose,139.8,No,44.2,Male,81.6,38.6,Hypotensol,50,4,139.2,Missed,NHS Greater Glasgow
+84,High Dose,119.8,Yes,48.4,Female,66.5,25.7,Hypotensol,50,6,124.7,Missed,NHS Greater Glasgow
+85,High Dose,116.9,Yes,47.8,Male,53.5,18.8,Hypotensol,50,6,113.3,Completed,NHS Lothian
+86,High Dose,120.0,Yes,53.3,Female,60.4,21.0,Hypotensol,50,4,117.6,Completed,NHS Lothian
+87,High Dose,134.2,Yes,45.1,Male,67.0,22.5,Hypotensol,50,4,128.2,Completed,NHS Lothian
+88,High Dose,128.3,Yes,59.5,Female,88.9,29.7,Hypotensol,50,5,128.2,Completed,NHS Lothian
+89,High Dose,119.7,Yes,42.4,Female,93.6,27.3,Hypotensol,50,5,115.1,Completed,NHS Lothian
+90,High Dose,130.1,Yes,72.2,Female,69.7,23.3,Hypotensol,50,5,125.5,Completed,NHS Greater Glasgow

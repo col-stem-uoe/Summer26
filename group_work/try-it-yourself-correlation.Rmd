@@ -1,0 +1,502 @@
+---
+title: "Try It Yourself: Correlation"
+format:
+  html:
+    code-tools: true
+output: 
+  learnr::tutorial:
+    progressive: false  #this creates the sidebar (creates it= true, turns off sidebar= flase)
+    allow-skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+# Install and load required packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, DT, medicaldata, learnr, kableExtra, ggplot2, janitor)
+
+library(learnr)
+library(dplyr)
+library(ggplot2)
+library(medicaldata)
+library(DT)
+library(janitor)
+data("smartpill")
+```
+
+## 🔍 Your Task
+
+> Test whether **gastric emptying time** is associated with **total gut transit time** in healthy volunteers using the `smartpill`dataset.
+
+You will explore the relationship between **`gastric_emptying_time`** and **`total_gut_transit_time`** to determine whether people who take longer to empty their stomach also tend to take longer to fully digest and pass food through the entire gastrointestinal tract.
+
++:------------------------------------------------------------------------------------------------------------------------------+
+| \### 🧬 Dataset Overview: `smartpill`                                                                                         |
++-------------------------------------------------------------------------------------------------------------------------------+
+| **Source**: Data collected using the SmartPill wireless motility capsule\                                                     |
+| **Study type**: Prospective cohort study\                                                                                     |
+| **Participants**: 109 adults (87 healthy, 22 with gastroparesis)\                                                             |
+| **Device**: SmartPill capsule (measures pH, temperature, pressure)\                                                           |
+| **Primary measures**: Times (in hours) for transit through sections of the GI tract                                           |
++-------------------------------------------------------------------------------------------------------------------------------+
+| For this exercise, we will focus on **healthy participants only** (N = 87) to reduce missingness and simplify interpretation. |
++-------------------------------------------------------------------------------------------------------------------------------+
+
+### 📋 Variable Key
+
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| Position | Variable                 | Variable Label                  | Units                   | Codes / Notes                                                                               |
++==========+==========================+=================================+=========================+=============================================================================================+
+| 1        | `Group`                  | Study group                     | —                       | `0` = Critically Ill Trauma Patient<br>`1` = Healthy Volunteer                              |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 2        | `Gender`                 | Gender                          | —                       | `0` = Female<br>`1` = Male                                                                  |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 3        | `Race`                   | Race                            | —                       | `1` = White<br>`2` = Black<br>`3` = Asian/Pacific Islander<br>`4` = Hispanic<br>`5` = Other |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 4        | `Height`                 | Height                          | centimeters             |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 5        | `Weight`                 | Weight                          | kilograms               |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 6        | `Age`                    | Age                             | years                   |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 7        | `GE.Time`                | Gastric Emptying Time           | hours                   | From ingestion to gastric emptying                                                          |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 8        | `SB.Time`                | Small Bowel Transit Time        | hours                   | From gastric emptying to ileocecal junction                                                 |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 9        | `C.Time`                 | Colonic Transit Time            | hours                   | From ileocecal junction to body exit                                                        |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 10       | `WG.Time`                | Whole Gut Transit Time          | hours                   | From ingestion to body exit                                                                 |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 11       | `S.Contractions`         | Stomach Contractions            | contractions per minute | Peaks over 10 mmHg and under 300 mmHg                                                       |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 12       | `S.Sum.of.Amplitudes`    | Stomach Sum of Amplitudes       | —                       |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 13       | `S.Mean.Peak.Amplitude`  | Stomach Mean Peak Amplitude     | mm Hg                   | Sum of amplitudes ÷ number of contractions                                                  |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 14       | `S.Mean.pH`              | Stomach Mean pH                 | —                       | Average over recording time                                                                 |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 15       | `SB.Contractions`        | Small Bowel Contractions        | contractions per minute | Peaks over 10 mmHg and under 300 mmHg                                                       |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 16       | `SB.Sum.of.Amplitudes`   | Small Bowel Sum of Amplitudes   | —                       |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 17       | `SB.Mean.Peak.Amplitude` | Small Bowel Mean Peak Amplitude | mm Hg                   | Sum of amplitudes ÷ number of contractions                                                  |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 18       | `SB.Mean.pH`             | Small Bowel Mean pH             | —                       | Average over recording time                                                                 |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 19       | `C.Contractions`         | Colon Contractions              | contractions per minute | Peaks over 10 mmHg and under 300 mmHg                                                       |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 20       | `C.Sum.of.Amplitudes`    | Colon Sum of Amplitudes         | —                       |                                                                                             |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 21       | `C.Mean.Peak.Amplitude`  | Colon Mean Peak Amplitude       | mm Hg                   | Sum of amplitudes ÷ number of contractions                                                  |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+| 22       | `C.Mean.pH`              | Colon Mean pH                   | —                       | Average over recording time                                                                 |
++----------+--------------------------+---------------------------------+-------------------------+---------------------------------------------------------------------------------------------+
+
+### Step 1: Preview the Dataset
+
+#### Raw Dataset
+
+```{r raw_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(DT)
+
+# Show structure
+glimpse(smartpill)
+
+```
+
+#### Formatted Dataset
+
+```{r interactive_dataset, results='asis', exercise=TRUE, warning=FALSE, message=FALSE}
+DT::datatable(
+  smartpill,
+  options = list(scrollX = TRUE),
+  class = 'stripe nowrap',
+  caption = "Preview of the smartpill Dataset"
+)
+
+```
+
+### Step 2: Summarise by Group
+
+#### Healthy Patients
+
+```{r summary_by_group_healthy, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+# Your turn! Fill in the missing filters
+
+# Filter for healthy volunteers (Group = 1)
+healthy_data <- smartpill |>
+  filter(Group == 1)
+
+# Preview the dataset
+DT::datatable(
+  healthy_data,
+  options = list(scrollX = TRUE),
+  class = 'stripe nowrap',
+  caption = "Preview of the Healthy Volunteers Dataset"
+)
+
+```
+
+#### Critically Ill Patients
+
+```{r summary_by_group_gp, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# Filter for trauma patients (Group = 0)
+critically_ill_data <- smartpill |>
+  filter(Group == 0)
+
+# Preview the dataset
+DT::datatable(
+  critically_ill_data,
+  options = list(scrollX = TRUE),
+  class = 'stripe nowrap',
+  caption = "Preview of the Trauma Patients Dataset"
+)
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br> 1. Replace the first blank with <code>Group</code> — this is the variable that indicates patient type.<br> 2. Use <code>1</code> for Healthy volunteers and <code>0</code> for Critically Ill Trauma patients.<br> 3. Use <code>filter()</code> to isolate just the participants you want.<br> 4. The filtered datasets (e.g. <code>healthy_data</code>, <code>gp_data</code>) will be used in later steps for plotting and correlation analysis.
+:::
+
+### Step 3: Visualise the Relationship
+
+We’re going to explore whether people who take longer to empty their stomachs also take longer to fully pass food through the digestive system.
+
+For this step, you’ll create a scatterplot to visualise the relationship between:
+
+GE.Time: Gastric Emptying Time — how long it takes for food to leave the stomach WG.Time: Whole Gut Transit Time — how long it takes from ingestion to excretion We'll look at this relationship separately for each group:
+
+> Healthy volunteers (Group = 1)
+>
+> Critically ill trauma patients (Group = 0)
+
+#### 3a. Healthy Volunteers
+
+🧪 **Research Question:**\
+*Among healthy participants, is there a relationship between gastric emptying time and total gut transit time?*
+
+```{r scatterplot, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# Filter for healthy volunteers (Group = 1)
+healthy_data <- smartpill |>
+  filter(Group == 1)
+
+# Your turn! Plot the relationship in healthy volunteers
+
+ggplot(healthy_data, aes(x = ____, y = ____)) +      # <1>
+  geom_point(colour = "#C5004A", size = 2.5) +        # <2>
+  geom_smooth(method = "lm", se = FALSE, colour = "black") +  # <3>
+  labs(title = "Gastric Emptying vs Total Gut Transit Time",
+       x = "Gastric Emptying Time (hours)",
+       y = "Total Gut Transit Time (hours)") +
+  theme_minimal(base_size = 14)                      # <4>
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+
+Replace the blanks with the appropriate numeric variables: • <code>x = gastric_emptying_time</code> • <code>y = total_gut_transit_time</code><br> Use <code>geom_point()</code> to plot each patient as a dot.<br> Add <code>geom_smooth(method = "lm")</code> for a linear trend line (Pearson correlation).<br> Use clear axis labels and a minimal theme for readability.
+:::
+
+```{r scatterplot-solution}
+# Filter for healthy volunteers (Group = 1)
+healthy_data <- smartpill |>
+  filter(Group == 1)
+
+# Your turn! Plot the relationship in healthy volunteers
+ggplot(healthy_data, aes(x = `GE.Time`, y = `WG.Time`)) +
+  geom_point(colour = "#C5004A", size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE, colour = "black") +
+  labs(title = "Gastric Emptying vs Total Gut Transit Time",
+       x = "Gastric Emptying Time (hours)",
+       y = "Total Gut Transit Time (hours)") +
+  theme_minimal(base_size = 14)
+
+```
+
+#### 3b. Critically Ill Patients
+
+```{r scatterplot_ill, exercise=TRUE, results='asis', warning=FALSE, message=FALSE }
+
+# Filter for critically ill patients (Group = 0)
+critically_ill_data <- smartpill |> 
+  filter(Group == 0)
+
+# Plot the relationship
+ggplot(___, aes(x = `___`, y = `___`)) +
+  g geom_point(colour = "#2B5D8C", size = 2.5) +  # Dark blue points
+  geom_smooth(method = "lm", se = FALSE, colour = "#1B9E77") +  # Dark green regression line
+  labs(title = "Gastric Emptying vs Total Gut Transit Time (Critically Ill)",
+       x = "Gastric Emptying Time (hours)",
+       y = "Total Gut Transit Time (hours)") +
+  theme_minimal(base_size = 14)
+
+```
+
+```{r scatterplot_ill-solution}
+
+# Filter for critically ill patients (Group = 0)
+critically_ill_data <- smartpill |> 
+  filter(Group == 0)
+
+# Plot the relationship
+ggplot(critically_ill_data, aes(x = `GE.Time`, y = `WG.Time`)) +
+  geom_point(colour = "#2B5D8C", size = 2.5) +  # Dark blue points
+  geom_smooth(method = "lm", se = FALSE, colour = "#1B9E77") +  # Dark green regression line
+  labs(title = "Gastric Emptying vs Total Gut Transit Time (Critically Ill)",
+       x = "Gastric Emptying Time (hours)",
+       y = "Total Gut Transit Time (hours)") +
+  theme_minimal(base_size = 14)
+
+
+```
+
+### EXTRA: Compare Groups
+
+```{r plot_comparegroups, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+
+# Convert Group to factor for clearer labels
+smartpill$Group <- factor(smartpill$Group,
+                          levels = c(0, 1),
+                          labels = c("Critically Ill", "Healthy"))
+
+# Plot both groups together, colour-coded
+ggplot(smartpill, aes(x = `GE.Time`, y = `WG.Time`, colour = Group)) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_colour_manual(values = c("Critically Ill" = "#2B5D8C",
+                                 "Healthy" = "#C5004A")) +
+  labs(title = "Gastric Emptying vs Total Gut Transit Time by Group",
+       x = "Gastric Emptying Time (hours)",
+       y = "Total Gut Transit Time (hours)",
+       colour = "Group") +
+  theme_minimal(base_size = 14)
+
+```
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+- Use the full <code>smartpill</code> dataset to include all participants.<br>
+- Set <code>colour = Group</code> inside <code>aes()</code> to colour the dots by group.<br>
+- Add <code>geom_smooth()</code> to show a trend line per group.<br>
+- Use <code>scale_colour_manual()</code> to customise colours (optional).<br>
+- Label axes clearly and include a legend title.
+:::
+
+
+<div style="border-left: 4px solid #1976D2; padding: 1em; background-color: #E3F2FD; border-radius: 4px;">
+<strong>🧠 Think about it...</strong><br><br>
+• Does the relationship between gastric emptying and total gut transit time look different across groups?<br>
+• Which group shows a stronger correlation?<br>
+• What does this suggest about digestion in healthy vs critically ill patients?
+</div>
+
+
+### Step 4: Run a Correlation Test
+#### 4a. Healthy Volunteers
+
+```{r run-correlation-healthy, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+# Filter again just in case
+healthy_data <- smartpill |>
+  filter(Group == 1)
+
+# Your turn! Run a Pearson correlation test
+cor.test(___, ___, method = "pearson")   # <1>
+
+```
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+
+Use <code>healthy_data$GE.Time</code> as the first argument (X variable)<br>
+Use <code>healthy_data$WG.Time</code> as the second argument (Y variable)<br>
+Make sure the method is set to <code>"pearson"</code>
+:::
+
+```{r run-correlation-healthy-solution}
+# Filter again just in case
+healthy_data <- smartpill |>
+  filter(Group == 1)
+
+# Pearson correlation for healthy volunteers
+cor.test(healthy_data$`GE.Time`, healthy_data$`WG.Time`, method = "pearson")
+
+```
+
+#### 4b. Critically Ill Patients
+```{r run-correlation-ill, exercise=TRUE, results='asis', warning=FALSE, message=FALSE}
+# Filter for critically ill patients
+critically_ill_data <- smartpill |>
+  filter(Group == 0)
+
+# Your turn! Run a Pearson correlation test
+cor.test(___, ___, method = "pearson")   # <1>
+
+```
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+
+Use <code>critically_ill_data$GE.Time</code> and <code>critically_ill_data$WG.Time</code><br>
+This will tell us if gastric emptying predicts total gut transit time among critically ill patients
+:::
+
+```{r run-correlation-ill-solution}
+# Filter for critically ill patients
+critically_ill_data <- smartpill |>
+  filter(Group == 0)
+
+# Pearson correlation for critically ill patients
+cor.test(critically_ill_data$`GE.Time`, critically_ill_data$`WG.Time`, method = "pearson")
+
+```
+
+### Step 5: Interpret the Results
+
+Let’s reflect on what the correlation results mean for each group.
+
+#### 5a. Healthy Volunteers
+
+Use multiple-choice and fill-in-the-blank to help students extract the key values from the test output.
+
+```{r interpretation_question, echo=FALSE}
+question("What was the correlation coefficient (r) for the healthy group?",
+  answer("0.25", correct = TRUE),
+  answer("0.52"),
+  answer("–0.38"),
+  answer("0.91"),
+  allow_retry = TRUE
+)
+
+```
+
+```{r interpretation_question2, echo=FALSE}
+question("Was the correlation statistically significant (p < .05)?",
+  answer("Yes ✅", correct = TRUE),
+  answer("No ❌"),
+  allow_retry = TRUE
+)
+
+```
+
+Now, write your interpretation here:
+
+```{r writeup-interpretation, exercise=TRUE}
+# Write your interpretation here
+
+# What does the correlation mean in the context of healthy volunteers?
+# Think about direction, strength, significance, and what it implies about the relationship.
+
+
+```
+
+```{r writeup-interpretation-solution}
+Among healthy participants, there was a **weak but statistically significant positive correlation** between gastric emptying time and total gut transit time (r = 0.25, p = .020). This suggests that those who take longer to empty their stomach also tend to have longer overall digestion times.
+
+```
+
+
+#### 5b. Critically Ill Patients
+
+```{r interpretation_question_ill, echo=FALSE}
+question("What was the correlation coefficient (r) for the critically ill group?",
+  answer("0.52", correct = TRUE),
+  answer("0.25"),
+  answer("–0.38"),
+  answer("0.91"),
+  allow_retry = TRUE
+)
+
+```
+
+
+```{r interpretation_question_ill2, echo=FALSE}
+question("Was the correlation statistically significant (p < .05)?",
+  answer("No ❌", correct = TRUE),
+  answer("Yes ✅"),
+  allow_retry = TRUE
+)
+
+```
+
+Now, write your interpretation below:
+
+```{r writeup-interpretation-ill, exercise=TRUE}
+# Write your interpretation here
+
+# What does the correlation mean in the context of critically ill patients?
+# Think about direction, strength, significance, and what it implies about the relationship.
+
+```
+
+```{r writeup-interpretation-ill-solution}
+Among critically ill patients, there was a **moderate positive correlation** between gastric emptying time and total gut transit time (r = 0.52), but this result was **not statistically significant** (p = .231). This means we cannot conclude that the two variables are reliably related in this group — the observed association could be due to chance, especially given the small sample size.
+
+```
+
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint: How to interpret a correlation</strong><br><br>
+
+- **Direction**:  
+  A **positive** correlation means that both variables increase together.  
+  A **negative** correlation means that as one increases, the other decreases.
+
+- **Strength**:  
+  Use the correlation coefficient **r** to describe strength:  
+  • 0.00–0.19 = Very weak  
+  • 0.20–0.39 = Weak  
+  • 0.40–0.59 = Moderate  
+  • 0.60–0.79 = Strong  
+  • 0.80–1.00 = Very strong  
+
+- **Significance**:  
+  If the **p-value is below 0.05**, the result is **statistically significant** — meaning the observed relationship is unlikely to be due to chance.
+
+✅ Use all three elements — direction, strength, and significance — to interpret the result clearly.
+:::
+
+### ✍️ Step 6: Write-up Across Groups
+Now it’s your turn to write a short results paragraph using the correlation results you interpreted above.
+
+Use the template below and replace the blanks with your results:
+
+```{r  writeup-interpretation-general, exercise=TRUE}
+
+
+# Complete the paragraph below by replacing the blanks with your findings from Step 5.
+
+# Remember to include: the direction, strength, significance, and a comparison between groups.
+
+This study examined whether ________ was associated with ________ in both ________ and ________ participants.
+
+Among healthy participants, there was a ________ (strength) and ________ (significance) correlation between the two variables (r = ____, p = ____), suggesting that ________.
+
+Among critically ill patients, the association was ________ (strength) and ________ (significance) (r = ____, p = ____), indicating that ________.
+
+Together, these results suggest that while the association exists in both groups, it is ________ (comparative statement), possibly due to ________.
+
+```
+
+::: {style="border-left: 4px solid #D3A100; padding: 1em; background-color: #FFF8E1; border-radius: 4px;"}
+<strong>💡 Hint:</strong><br><br>
+Include the following elements:<br><br>
+
+Who the results are about (Healthy or Critically Ill patients)
+Direction and strength of the correlation (positive/negative; weak/moderate/etc.)
+The correlation coefficient (r) and the p-value
+A sentence about what the result means in context
+:::
+
+```{r writeup-interpretation-general-solution}
+
+This study examined whether gastric emptying time was associated with total gut transit time in both healthy and critically ill participants.
+
+Among healthy participants, there was a weak but statistically significant correlation between the two variables (r = 0.25, p = .020), suggesting that those who take longer to empty their stomach also tend to have longer digestive times.
+
+Among critically ill patients, the association was moderate and statistically significant (r = 0.46, p = .029), indicating that delayed gastric emptying is more strongly linked to total transit time in this group.
+
+Together, these results suggest that while the association exists in both groups, it is stronger in critically ill patients, possibly due to impaired gastrointestinal motility in critical illness.
+
+```
+
