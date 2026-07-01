@@ -177,10 +177,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a>
+  <li><a href="#session-1-summary-statistics-and-visualisation" id="toc-session-1-summary-statistics-and-visualisation" class="nav-link active" data-scroll-target="#session-1-summary-statistics-and-visualisation">Session 1: Summary Statistics and Visualisation</a>
   <ul class="collapse">
-  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">Research question</a></li>
-  </ul></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
   <li><a href="#calculate-summary-statistics-for-each-group" id="toc-calculate-summary-statistics-for-each-group" class="nav-link" data-scroll-target="#calculate-summary-statistics-for-each-group">(1) Calculate Summary Statistics for Each Group</a>
   <ul class="collapse">
   <li><a href="#key-finding" id="toc-key-finding" class="nav-link" data-scroll-target="#key-finding">Key finding</a></li>
@@ -195,6 +194,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#interpreting-the-plot" id="toc-interpreting-the-plot" class="nav-link" data-scroll-target="#interpreting-the-plot">Interpreting the Plot</a></li>
   <li><a href="#key-finding-1" id="toc-key-finding-1" class="nav-link" data-scroll-target="#key-finding-1">Key finding</a></li>
   <li><a href="#but" id="toc-but" class="nav-link" data-scroll-target="#but">But…</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -222,16 +222,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="session-1-summary-statistics-and-visualisation" class="level1">
+<h1>Session 1: Summary Statistics and Visualisation</h1>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">Background</h2>
 <p>High blood pressure is a major risk factor for cardiovascular disease. Researchers have developed a new medication called <strong>Hypotensol</strong> and want to determine whether it reduces blood pressure more effectively than a placebo.</p>
 <p>To investigate this, they conducted a randomised clinical trial.</p>
-<section id="research-question" class="level3 highlight">
-<h3 class="anchored" data-anchor-id="research-question">Research question</h3>
+<div class="highlight">
+<p><strong>Research question</strong></p>
 <blockquote class="blockquote">
 <p>Do patients receiving the <strong>High Dose Hypotensol</strong> treatment have lower post-treatment systolic blood pressure than patients receiving the <strong>Placebo</strong> treatment?</p>
 </blockquote>
-</section>
+</div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -264,8 +266,6 @@ Think like a researcher
 <section id="calculate-summary-statistics-for-each-group" class="level2">
 <h2 class="anchored" data-anchor-id="calculate-summary-statistics-for-each-group">(1) Calculate Summary Statistics for Each Group</h2>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>group_summary <span class="ot">&lt;-</span> bp_data <span class="sc">|&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -275,7 +275,6 @@ Think like a researcher
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>group_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 4
   group         n Mean_SBP SD_SBP
@@ -319,8 +318,6 @@ Optional: Rounding the output
 <p>To make the summary table easier to read, we can use the <code>round()</code> function.</p>
 <p>For example:</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>group_summary <span class="ot">&lt;-</span> bp_data <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -330,7 +327,6 @@ Optional: Rounding the output
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>group_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 4
   group         n Mean_SBP SD_SBP
@@ -399,10 +395,7 @@ Note: What if some values are missing? - How to check and what to do
 <p>In R, missing values are shown as <code>NA</code>.</p>
 <p>To check whether <code>sbp_post</code> contains missing values, we can use:</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(data<span class="sc">$</span>sbp_post))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
@@ -411,10 +404,7 @@ Note: What if some values are missing? - How to check and what to do
 <p>If a variable does contain missing values, many R functions allow us to ignore them using <code>na.rm = TRUE</code>.</p>
 <p>For example:</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data<span class="sc">$</span>sbp_post, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 134.0111</code></pre>
 </div>
@@ -439,13 +429,10 @@ Note: What if some values are missing? - How to check and what to do
 </blockquote>
 <p>Let’s create a simple <strong>bar chart</strong> showing the <strong>mean post-treatment systolic blood pressure</strong> for each treatment group.</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(group_summary,</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> group,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> Mean_SBP)) <span class="sc">+</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -505,8 +492,6 @@ The <code>+</code> symbol in ggplot
 <li><p>Labelling the axes.</p></li>
 </ol>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(group_summary,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> group,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> Mean_SBP)) <span class="sc">+</span></span>
@@ -519,7 +504,6 @@ The <code>+</code> symbol in ggplot
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Treatment group"</span>,</span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean post-treatment systolic blood pressure (mmHg)"</span></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -639,6 +623,7 @@ Looking ahead to Session 2
 </div>
 
 
+</section>
 </section>
 </section>
 

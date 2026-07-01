@@ -9,6 +9,11 @@ format:
     toc: true
     toc-depth: 3
     css: styles.css
+execute:
+  echo: true
+  warning: false
+  message: false
+  
 editor: visual
 ---
 
@@ -66,7 +71,7 @@ Ask yourself:
 ## Solution
 
 | Variable | Description | Type | Role |
-|----|----|----|----|
+|------------------|-------------------|------------------|------------------|
 | `sbp_post` | SBP after treatment | Numeric | Dependent variable (DV) |
 | `group` | Treatment group (Placebo / High Dose) | Categorical (2 levels) | Independent variable (IV) |
 
@@ -81,7 +86,7 @@ It's the thing you're **grouping by or comparing across** — in this case, trea
 ### Summary Table of different test statistics for hypothesis testing
 
 | Research question | Variables | Test |
-|----|----|----|
+|---------------------------|---------------------------|------------------|
 | Compare two group means | One numeric + one categorical (2 groups) | t-test |
 | Compare three or more group means | One numeric + one categorical (3+ groups) | ANOVA |
 | Compare two categorical variables | Two categorical | Chi-square |
@@ -250,7 +255,7 @@ t.test(sbp_post ~ group,
 **Where can you find each value?**
 
 | Output | What does it tell us? |
-|----|----|
+|------------------------------------|------------------------------------|
 | `t` | The **t-statistic** |
 | `df` | The **degrees of freedom** |
 | `p-value` | Whether the difference is statistically significant |

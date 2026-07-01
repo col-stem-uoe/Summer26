@@ -1,22 +1,26 @@
 ---
 title: "Exploring a Clinical Trial Dataset"
-subtitle: "Session 1"
+subtitle: "Session 1: Summary Statistics and Visualisation"
 format:
   html:
     code-annotations: hover
-    code-fold: true
-    code-fold-label: "Show Code"
+    code-fold: false
     toc: true
     toc-depth: 3
     css: styles.css
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
 editor: visual
 ---
+
 ```{r setup, include=FALSE}
 
 library(tidyverse)
 ```
-
-
 
 # Exploring a Clinical Trial Dataset
 
@@ -28,11 +32,11 @@ High blood pressure is a major risk factor for cardiovascular disease. Researche
 
 To investigate this, they conducted a randomised clinical trial.
 
-::: highlight
+
 ### Research question
 
 > Do patients receiving the **High Dose Hypotensol** treatment have lower post-treatment systolic blood pressure than patients receiving the **Placebo** treatment?
-:::
+
 
 ## Dataset
 
@@ -82,7 +86,7 @@ Every statistical analysis begins with a research question. The research questio
 - which statistical methods are appropriate.
 :::
 
-::: checklist-box
+
 ### Learning objectives
 
 By the end of this activity, you should be able to:
@@ -96,7 +100,7 @@ By the end of this activity, you should be able to:
 - use R to summarise and visualise data;
 
 - interpret descriptive statistics in the context of a research question.
-:::
+
 
 ::: example-box
 ### Identifying the variables
@@ -211,21 +215,17 @@ Which variable tells us:
 
 - post-treatment blood pressure?
 
-```{r}
+```{r echo=FALSE}
 
 library(DT)
 
 DT::datatable(
   data,
-  rownames = FALSE,
-  caption = htmltools::tags$caption(
-    style = "caption-side: top; text-align: left; font-weight: bold;",
-    "Clinical trial dataset"
-  ),
+  class = "compact stripe hover",
   options = list(
-    pageLength = 10,
+    pageLength = 8,
     scrollX = TRUE,
-    autoWidth = TRUE
+    autoWidth = FALSE
   )
 )
 

@@ -1,11 +1,37 @@
 ---
-title: "Investigating a Clinical Trial Dataset"
-author: " "
-date: "2026"
+title: "Do It Yourself"
+subtitle: "Session 1 Practice"
+format:
+  html:
+    code-annotations: hover
+    code-fold: false
+    toc: true
+    toc-depth: 2
+    css: styles.css
 
+execute:
+  echo: true
+  warning: false
+  message: false
+
+editor: visual
 ---
 
-# Importing the data set
+# Do It Yourself
+
+Apply the skills you learned in Session 1 to answer two new research questions.
+
+For each activity you should:
+
+- identify the variables;
+- decide whether a subset is needed;
+- calculate summary statistics;
+- create an appropriate graph; and
+- briefly interpret your findings.
+
+# Activity 1 (Clinical trial)
+
+## Importing the data set
 
 ```{r}
 library(tidyverse)
@@ -17,150 +43,82 @@ data <- read_csv(
 
 ```
 
-# **Research Question A**
+## Research question
 
-> Did patients in the High Dose group have lower blood pressure after treatment than before treatment?
+> Do male and female patients differ in their post-treatment systolic blood pressure?
 
-Variables:
-
-- `sbp_pre`
-
-- `sbp_post`
-
-```{r}
-high_dose <- data |>
-  filter(group %in% c("High Dose"))
-```
-
-or you could use `filter(group == "High Dose")` = Filter the data to keep rows where the group is High Dose.
-
-```{r}
-high_dose <- data |>
-  filter(group == "High Dose")
-```
-
-```{r}
-high_dose_summary <- high_dose |>
-  summarise(
-    n = n(),
-    Mean_Pre = mean(sbp_pre),
-    Mean_Post = mean(sbp_post),
-    SD_Pre = sd(sbp_pre),
-    SD_Post = sd(sbp_post)
-  )
-
-high_dose_summary
-```
-
-### Reshaping the Data for Plotting
-
-The summary table produced by `summarise()` looks like this:
-
-| Mean_Pre | Mean_Post |
-|----------|-----------|
-| 138.4    | 125.1     |
-
-This format is called **wide format** because the values are stored across multiple columns.
-
-However, `ggplot()` often works more easily when the data are stored in **long format**, where the values are arranged in rows instead.
-
-The `pivot_longer()` function converts the table into the following format:
-
-| Time      | Mean_SBP |
-|-----------|----------|
-| Mean_Pre  | 138.4    |
-| Mean_Post | 125.1    |
-
-```{r}
-pivot_longer(
-  cols = everything(),
-  names_to = "Time",
-  values_to = "Mean_SBP"
-)
-```
-
-#### What does each argument do?
-
-```         
-cols = everything()
-```
-
-Select all columns in the dataset. In this case, these are:
-
-- `Mean_Pre`
-
-- `Mean_Post`
-
-```         
-names_to = "Time"
-```
-
-Take the column names (`Mean_Pre` and `Mean_Post`) and store them in a new variable called `Time`.
-
-```         
-values_to = "Mean_SBP"
-```
-
-Take the values stored inside those columns (`138.4` and `125.1`) and store them in a new variable called `Mean_SBP`.
-
-```{r}
-high_dose_plot <- high_dose |>
-  summarise(
-    Before = mean(sbp_pre),
-    After = mean(sbp_post)
-  ) |>
-  pivot_longer(
-    cols = everything(),
-    names_to = "Time",
-    values_to = "Mean_SBP"
-  )
-```
-
-```{r}
-high_dose_plot <- high_dose_plot |>
-  mutate(
-    Time = factor(
-      Time,
-      levels = c("Before", "After")
-    )
-  )
-```
-
-```{r}
-ggplot(high_dose_plot,
-       aes(x = Time,
-           y = Mean_SBP)) +
-  geom_col(fill = "steelblue") +
-  geom_text(
-    aes(label = round(Mean_SBP, 1)),
-    vjust = -0.5
-  ) +
-  labs(
-    x = "Time point",
-    y = "Mean systolic blood pressure (mmHg)"
-  )
-```
-
-# **Research Question B**
-
-**Do male and female patients differ in their post-treatment systolic blood pressure?**
-
-Variables:
+### Variables
 
 - `sex` (categorical)
 
 - `sbp_post` (numerical)
 
-YOU should:
+### Your task
 
-- Identify the variables.
+1.  Identify the independent and dependent variables.
 
-- Use `count(data, sex)`.
+2.  Count the number of males and females.
 
-- Create a subset if needed.
+3.  Calculate the mean post-treatment systolic blood pressure for each sex.
 
-- Calculate group means.
+4.  Create a bar chart showing the group means.
 
-- Create a bar plot.
+5.  Write one or two sentences describing your findings.
 
-- Interpret the results.
+# Activity 2 : Exploring a Tuberculosis Trial Dataset
+
+## Research question
+
+> Do patients receiving Streptomycin have higher recovery scores than patients receiving standard care?
+
+### 🧬 Dataset Overview: `strep_tb`
+
+**Source**: Reconstructed data from the 1948 BMJ paper\
+**Study type**: Randomised, placebo-controlled trial\
+**Participants**: 107 patients with tuberculosis\
+**Treatment arms**:\
+- `Streptomycin` (2g daily)\
+- `Control` (no streptomycin)
+
+### Variable Key
+
+| Variable | Description |
+|------------------------------------|------------------------------------|
+| `patient_id` | Unique patient identifier |
+| `arm` | Treatment group: Streptomycin or Control |
+| `dose_strep_g` | Dose of Streptomycin in grams |
+| `gender` | M / F |
+| `baseline_condition` | 1 = Good, 2 = Fair, 3 = Poor |
+| `baseline_temp` | Categorised body temperature |
+| `baseline_esr` | ESR (inflammation marker) category |
+| `baseline_cavitation` | Cavitation on X-ray: yes/no |
+| `strep_resistance` | Streptomycin resistance at 6 months |
+| `radiologic_6m` | X-ray outcome description |
+| `rad_num` | Numeric X-ray outcome (1 = death → 6 = great improvement) |
+| `improved` | TRUE if rad_num ≥ 5, otherwise FALSE |
+| `recovery_score` | Continuous recovery score (0–100). Higher scores indicate better recovery. |
+
+## Step 1: Import the dataset
+
+```{r}
+
+strep_data <- read_csv(
+  "https://raw.githubusercontent.com/col-stem-uoe/Summer26/refs/heads/main/datasets/strep_tb_teaching.csv",
+  show_col_types = FALSE
+)
+
+```
+
+### Your task 
+
+1.  Identify the independent variable and the dependent variable.
+
+2.  Use count() to find out how many patients received Streptomycin and how many were in the Control group.
+
+3.  Create a new dataset containing only the variables needed to answer the research question.
+
+4.  Calculate the number (and, if you wish, the percentage) of patients who improved in each treatment group.
+
+5.  Create an appropriate graph to compare the treatment groups.
+
+6.  Write one or two sentences describing your findings.
